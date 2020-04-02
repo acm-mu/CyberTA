@@ -12,4 +12,5 @@ client.on('message', message => {
 });
 
 // THIS  MUST  BE  THIS  WAY
+// test from liam
 client.login("bDbbjCBUGOuCbPirr7CLgjdii2awy7dr");//BOT_TOKEN is the Client Secret
