@@ -1,5 +1,5 @@
 {
-    "name": "TA Bot",
+    "name": "ta-bot",
     "description": "Operating Systems office hours Discord bot",
     "version": "0.0.0",
     "main": "bot.js",
