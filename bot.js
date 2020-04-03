@@ -4,11 +4,12 @@ const officehours = require('./officehours')
 
 client.on('message', message => {
     var args = message.content.split(" ")
-    const cmd = args[0]
+    const cmd = args[0].toLowerCase()
     args.splice(0, 1)
 
     switch(cmd) {
         case "next":
+        case "!next":
             officehours.onNext(client, message, args)
             break
         case "!queue":
