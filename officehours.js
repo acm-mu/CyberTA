@@ -85,7 +85,7 @@ exports.onReady = (client, message) => {
     message.reply(`There are now ${queue.length} people on the queue.`)
 }
 
-exports.onWow = (client, message, args) => {
+exports.onOof = (client, message, args) => {
     if (TA_CHANNEL == message.channel.id) {
      x++;
      message.reply("There has been " + x + " 'interesting' questions to date.")
