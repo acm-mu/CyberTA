@@ -8,15 +8,16 @@ client.on('message', message => {
 
     switch(cmd) {
         case "next":
-            officehours.onNext(client, message, args);
+            officehours.onNext(client, message, args)
             break
         case "!queue":
-            officehours.onQueue(client, message);
+            officehours.onQueue(client, message)
+            break
         case "!remove":
-            officehours.onRemove(client, message, args);
-            break;
+            officehours.onRemove(client, message, args)
+            break
         case "!help":
-            officehours.onHelp(client, message);
+            officehours.onHelp(client, message)
     }
 })
 
