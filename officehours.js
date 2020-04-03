@@ -57,7 +57,7 @@ exports.onRemove = (client, message, args) => {
     var index = parseInt(args[0])
 
     var msg = queue[index].message
-    msg.reply(`${msg.author.username}, ${message.author.username} is ready for you. Move to TA office.`)
+    msg.reply(`${message.author.username} is ready for you. Move to TA office.`)
     msg.delete()
 
     queue.splice(index, 1)
