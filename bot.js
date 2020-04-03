@@ -18,6 +18,10 @@ client.on('message', message => {
         case "!remove":
             officehours.onRemove(client, message, args)
             break
+        case "!ready":
+        case "ready":
+            officehours.onReady(client, message)
+            break
         case "!help":
             officehours.onHelp(client, message)
     }
