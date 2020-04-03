@@ -1,5 +1,8 @@
+const moment = require('moment')
+
 var queue = []
 const TA_CHANNEL = "695206670883618827"
+
 
 function positionInQueue(member) {
     for (var i = 0; i < queue.length; i++)
