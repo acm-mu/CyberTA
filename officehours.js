@@ -32,7 +32,7 @@ exports.onQueue = (client, message) => {
         var body = ""
         if (queue.length == 0) {
             body = "The queue is empty right now! :D"
-        } else {}
+        } else {
             for (var i = 0; i < queue.length; i++) {
                 var username = queue[i].member.username
                 var waitTime = moment(queue[i].timestamp).fromNow()
