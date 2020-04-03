@@ -14,6 +14,7 @@ exports.onNext = (client, message, args) => {
     queue.push({
         member: message.author,
         desc: args.join(" "),
+        message: message,
         timestamp: new Date()
     })
 
@@ -52,7 +53,13 @@ exports.onRemove = (client, message, args) => {
         return
     }
     var index = parseInt(args[0])
+
+    var msg = queue[index].message
+    msg.reply(`${msg.author.username}, ${message.author.username} is ready for you. Move to TA office.`)
+    msg.delete()
+
     queue.splice(index, 1)
+
     message.react("👍")
     message.reply(`There are now ${queue.length} people on the queue.`)
 }
