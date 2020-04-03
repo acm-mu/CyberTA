@@ -87,7 +87,7 @@ exports.onReady = (client, message) => {
 
 exports.onWow = (client, message, args) => {
      x++;
-     message.reply("There have been " + x + " 'interesting' questions to date.")
+     message.reply("There has been " + x + " 'interesting' questions to date.")
     //message.reply(`You are now #${queue.length} in the queue.`)
 }
 
