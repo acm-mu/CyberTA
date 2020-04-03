@@ -5,7 +5,6 @@ var queue = []
 const CHANNEL = "695206607008694302"
 const TA_CHANNEL = "695206670883618827"
 
-
 function positionInQueue(member) {
     for (var i = 0; i < queue.length; i++)
         if (queue[i].member.id == member.id) return i
@@ -41,7 +40,7 @@ exports.onQueue = (client, message) => {
         message.channel.send(body, embed=true)
         return
     } else if (CHANNEL == message.channel.id) {
-        const index = positionInQueue(client.member)
+        const index = positionInQueue(message.author)
         if(-1 != index)
             message.reply(`You are #${index + 1} in the queue!`)
     }
