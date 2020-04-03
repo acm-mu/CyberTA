@@ -89,7 +89,7 @@ exports.onOof = (client, message, args) => {
 
 exports.onHelp = (client, message) => {
     if (CHANNEL == message.channel.id)
-        message.reply("To join the queue, type ```next``` followed by a brief description of what you need help with.")
+        message.reply("To join the queue, type ```next``` or ```!next``` followed by a brief description of what you need help with.")
     else
         message.reply("!queue to view the queue. !remove <index> to remove user, and notify them you're ready.")
 }
