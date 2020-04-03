@@ -10,7 +10,7 @@ function positionInQueue(member) {
 exports.onNext = (client, message, args) => {
     queue.push({
         member: message.member,
-        desc: " ".join(args),
+        desc: args.join(" "),
         timestamp: new Date()
     })
 
