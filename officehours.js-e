@@ -15,6 +15,12 @@ const tas = {
 }
 
 function ready(message, index) {
+
+    /**
+     * If the next person in the queue is offline, it should skip over them.
+     * This will be a permenant skip, and will not add it to the dequeue cache.
+     */
+
     var msg = queue[index].message
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
@@ -32,6 +38,12 @@ function contains(member) {
             return true
     return false
 }
+
+/**
+ * Users can add themselves to the queue via the next command. If users are 
+ * already on the queue, it will let them know and quit. The bot will also
+ * let them know on success
+ */
 
 exports.onNext = (client, message, args) => {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
@@ -57,12 +69,21 @@ exports.onNext = (client, message, args) => {
 
     message.reply(`You are now #${queue.length} in the queue.`)
        .then(msg => {
-            msg.delete({ timeout: 5000 }) 
+            msg.delete({ timeout: 10 * 1000 }) 
         })
 }
 
+/**
+ * If a TA accidently readied a student, and needs to put them back on the queue.
+ * '!undo' will automatically put the last dequeued member back to the front of the queue.
+ * 
+ * If the bot does not remember any recent readied students, it will tell the TA.
+ * 
+ * There is currently no Bot process for letting the user know it was an accident
+ */
+
 exports.onUndo = (client, message) => {
-    if (TA_CHANNEL = message.channel.id) {
+    if (TA_CHANNEL == message.channel.id) {
         if (dequeued.length == 0) {
             message.react("🛑")
             message.reply("```There is currently nothing in the dequeue cache.```")
