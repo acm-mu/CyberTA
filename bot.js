@@ -4,7 +4,7 @@ const officehours = require('./officehours')
 
 client.on('message', message => {
     const cmd = message.content.split(" ")[0]
-    const args = message.content.replace(cmd, "")
+    const args = args.splice(0, 1)
 
     switch(cmd) {
         case "next":
