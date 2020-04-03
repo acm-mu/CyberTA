@@ -1,18 +1,23 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
-
-client.on('ready', () => {
-    console.log('I am ready!');
-});
+const Discord = require('discord.js')
+const client = new Discord.Client()
+const officehours = require('./officehours')
 
 client.on('message', message => {
-    if (message.content === 'ping') {
-       message.reply('pong');
-       }
-    else if (message.content === 'hello') {
-       message.reply('world');
-       }
-});
+    const cmd = message.content.split(" ")[0]
+    const args = message.content.replace(cmd, "")
 
-// THIS  MUST  BE  THIS  WAY
-client.login(process.env.BOT_TOKEN);//BOT_TOKEN is the Client Secret
+    switch(cmd) {
+        case "next":
+            officehours.onNext(client, message, args);
+            break
+        case "!queue":
+            officehours.onQueue(client, message);
+        case "!remove":
+            officehours.onRemove(client, message, args);
+            break;
+        case "!help":
+            officehours.onHelp(client, message);
+    }
+})
+
+client.login(process.env.BOT_TOKEN)
