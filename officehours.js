@@ -17,7 +17,7 @@ exports.onNext = (client, message, args) => {
         timestamp: new Date()
     })
 
-    message.add_reaction("👍")
+    message.react("👍")
     message.reply(`You are now #${queue.length} in the queue.`)
 }
 
@@ -48,7 +48,7 @@ exports.onRemove = (client, message, args) => {
     }
     var index = parseInt(args[0])
     queue.splice(index, 1)
-    message.add_reaction("👍")
+    message.react("👍")
     message.reply(`There are now ${queue.length} people on the queue.`)
 }
 
