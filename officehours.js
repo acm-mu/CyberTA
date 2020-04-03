@@ -12,7 +12,7 @@ function positionInQueue(member) {
 
 exports.onNext = (client, message, args) => {
     queue.push({
-        member: message.member,
+        member: message.author,
         desc: args.join(" "),
         timestamp: new Date()
     })
@@ -25,13 +25,15 @@ exports.onQueue = (client, message) => {
     message.channel.send(`There are currently ${queue.length} people in the queue.`)
     
     if (message.channel.id == TA_CHANNEL) {
+        var body = "";
         for (var i = 0; i < queue.length; i++) {
             var username = queue[i].member.nick
-            var waitTime = moment(queue[i].timestamp)
+            var waitTime = moment(queue[i].timestamp).fromNow()
             var desc = queue[i].desc
 
-            message.channel.send(` #${i+1}: ${username} ${waitTime}\n ${desc}`)
+            body += `\t#${i+1}\t${username}\t${waitTime}\n\t\t${desc}\n`
         }
+        message.channel.send(body)
         return
     }
 
