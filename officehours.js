@@ -116,10 +116,8 @@ exports.onReady = (client, message) => {
 }
 
 exports.onOof = (client, message, args) => {
-    if (TA_CHANNEL == message.channel.id) {
      x++;
      message.reply("There has been " + x + " 'persistent' questions to date.")
-    }
 }
 
 
