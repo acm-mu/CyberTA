@@ -29,7 +29,7 @@ exports.onNext = (client, message, args) => {
 exports.onQueue = (client, message) => {
     console.log(message)
     if (TA_CHANNEL == message.channel.id) {
-        var body = ""
+        var body = "```"
         if (queue.length == 0) {
             body = "The queue is empty right now! :D"
         } else {
@@ -41,10 +41,11 @@ exports.onQueue = (client, message) => {
                 body += `${i}) ${username}, " ${desc} ", ${waitTime}\n`
             }
         }
-        message.channel.send({embed: {
-            color: 3447003,
-            description: body
-        }})
+        message.channel.send(body + "```")
+       // message.channel.send({embed: {
+        //    color: 3447003,
+        //    description: body
+        //}})
         return
     } else if (CHANNEL == message.channel.id) {
         const index = positionInQueue(message.author)
