@@ -18,8 +18,8 @@ exports.onNext = (client, message, args) => {
 
     message.reply(`You are now #${queue.length} in the queue.`)
        .then(msg => {
-            message.delete(5000)
-            msg.delete(5000) 
+            message.delete({ timeout: 5000 })
+            msg.delete({ timeout: 5000 }) 
         })
 }
 
