@@ -12,6 +12,9 @@ client.on('message', message => {
     args.splice(0, 1)
 
     switch(cmd) {
+        case "ping":
+            message.reply("Pong!")
+            break
         case "next":
         case "!next":
             officehours.onNext(client, message, args)
