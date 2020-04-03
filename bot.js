@@ -3,7 +3,7 @@ const client = new Discord.Client()
 const officehours = require('./officehours')
 
 client.on('ready', () => {
-    console.log("I am ready!")
+    console.log("[CyberBot] CyberBot has finished loading, and is enabled!")
 })
 
 client.on('message', message => {
