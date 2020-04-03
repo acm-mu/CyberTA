@@ -85,6 +85,12 @@ exports.onReady = (client, message) => {
     message.reply(`There are now ${queue.length} people on the queue.`)
 }
 
+exports.onWow = (client, message, args) => {
+     message.reply("Hello")
+    //message.reply(`You are now #${queue.length} in the queue.`)
+}
+
+
 exports.onHelp = (client, message) => {
     if (CHANNEL == message.channel.id)
         message.reply("To join the queue, type ```next``` followed by a brief description of what you need help with.")
