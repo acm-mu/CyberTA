@@ -17,7 +17,7 @@ exports.onNext = (client, message, args) => {
     message.react("👍")
     var msg = message.reply(`You are now #${queue.length} in the queue.`)
     
-    message.delete(2000);
+  //  message.delete(2000);
     
    // setTimeout(function() {
      //   message.delete()
