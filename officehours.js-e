@@ -17,6 +17,8 @@ exports.onNext = (client, message, args) => {
         timestamp: new Date()
     })
 
+    console.log(message.author)
+
     message.react("👍")
     message.reply(`You are now #${queue.length} in the queue.`)
 }
@@ -44,7 +46,7 @@ exports.onQueue = (client, message) => {
 
 exports.onRemove = (client, message, args) => {
     console.log(args)
-    if (args.length == 0 || !Number.isInteger(args[0])) {
+    if (args.length == 0 || isNaN(args[0])) {
         message.reply("Please provide an index to remove.")
         message.reply("`!remove <index>`")
         return
