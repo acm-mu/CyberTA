@@ -86,9 +86,10 @@ exports.onReady = (client, message) => {
 }
 
 exports.onWow = (client, message, args) => {
+    if (TA_CHANNEL == message.channel.id) {
      x++;
      message.reply("There has been " + x + " 'interesting' questions to date.")
-    //message.reply(`You are now #${queue.length} in the queue.`)
+    }
 }
 
 
