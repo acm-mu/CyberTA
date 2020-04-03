@@ -20,14 +20,11 @@ exports.onNext = (client, message, args) => {
         timestamp: new Date()
     })
 
-    console.log(message.author)
-
     message.react("👍")
     //message.reply(`You are now #${queue.length} in the queue.`)
 }
 
 exports.onQueue = (client, message) => {
-    console.log(message)
     if (TA_CHANNEL == message.channel.id) {
         var body = ""
         if (queue.length == 0) {

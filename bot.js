@@ -2,6 +2,10 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 const officehours = require('./officehours')
 
+client.on('ready', () => {
+    console.log("I am ready!")
+})
+
 client.on('message', message => {
     var args = message.content.split(" ")
     const cmd = args[0].toLowerCase()
