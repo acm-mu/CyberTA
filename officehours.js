@@ -5,12 +5,6 @@ var x = 0;
 const CHANNEL = "695206607008694302"
 const TA_CHANNEL = "695206670883618827"
 
-function positionInQueue(member) {
-    for (var i = 0; i < queue.length; i++)
-        if (queue[i].member.id == member.id) return i
-    return -1
-}
-
 exports.onNext = (client, message, args) => {
     if (message.channel.id != CHANNEL) return // Behavior is only in the os-office-hours channel
     queue.push({
@@ -21,7 +15,12 @@ exports.onNext = (client, message, args) => {
     })
 
     message.react("👍")
-    //message.reply(`You are now #${queue.length} in the queue.`)
+    var msg = message.reply(`You are now #${queue.length} in the queue.`)
+
+    setTimeout(function() {
+        message.delete()
+        msg.delete()
+    }, 5000)
 }
 
 exports.onQueue = (client, message) => {
@@ -40,10 +39,6 @@ exports.onQueue = (client, message) => {
         }
         message.channel.send("```nimrod\n" + body + "```")
         return
-    } else if (CHANNEL == message.channel.id) {
-        const index = positionInQueue(message.author)
-        if(-1 != index)
-            message.reply(`You are #${index + 1} in the queue!`)
     }
 }
 
