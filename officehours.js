@@ -28,6 +28,7 @@ exports.onNext = (client, message, args) => {
 }
 
 exports.onQueue = (client, message) => {
+    console.log(message)
     if (TA_CHANNEL == message.channel.id) {
         var body = ""
         for (var i = 0; i < queue.length; i++) {
