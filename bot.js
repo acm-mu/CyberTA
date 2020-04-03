@@ -3,7 +3,7 @@ const client = new Discord.Client()
 const officehours = require('./officehours')
 
 client.on('message', message => {
-    var args = message.content.splice(" ")
+    var args = message.content.split(" ")
     const cmd = args[0]
     args.splice(0, 1)
 
