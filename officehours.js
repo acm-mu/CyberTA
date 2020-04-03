@@ -27,11 +27,11 @@ exports.onQueue = (client, message) => {
     if (message.channel.id == TA_CHANNEL) {
         var body = "";
         for (var i = 0; i < queue.length; i++) {
-            var username = queue[i].member.nick
+            var username = queue[i].member.name
             var waitTime = moment(queue[i].timestamp).fromNow()
             var desc = queue[i].desc
 
-            body += `\t#${i+1}\t${username}\t${waitTime}\n\t\t${desc}\n`
+            body += `\t#${i}\t${username}\t${waitTime}\n\t\t${desc}\n`
         }
         message.channel.send(body)
         return
@@ -43,9 +43,10 @@ exports.onQueue = (client, message) => {
 }
 
 exports.onRemove = (client, message, args) => {
+    console.log(args)
     if (args.length == 0 || !Number.isInteger(args[0])) {
         message.reply("Please provide an index to remove.")
-        message.reply("```!remove <index>`")
+        message.reply("`!remove <index>`")
         return
     }
     var index = parseInt(args[0])
