@@ -30,12 +30,16 @@ exports.onQueue = (client, message) => {
     console.log(message)
     if (TA_CHANNEL == message.channel.id) {
         var body = ""
-        for (var i = 0; i < queue.length; i++) {
-            var username = queue[i].member.username
-            var waitTime = moment(queue[i].timestamp).fromNow()
-            var desc = queue[i].desc
+        if (queue.length == 0) {
+            body = "The queue is empty right now! :D"
+        } else {}
+            for (var i = 0; i < queue.length; i++) {
+                var username = queue[i].member.username
+                var waitTime = moment(queue[i].timestamp).fromNow()
+                var desc = queue[i].desc
 
-            body += `${i}) ${username}\t${desc} \t\t${waitTime}\n`
+                body += `${i}) ${username}\t${desc} \t\t${waitTime}\n`
+            }
         }
         message.channel.send({embed: {
             color: 3447003,
