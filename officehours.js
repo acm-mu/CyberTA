@@ -1,5 +1,5 @@
 const moment = require('moment')
-var x = 0;
+var x = 0
 
 var queue = []
 var dequeued = []
