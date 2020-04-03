@@ -3,8 +3,9 @@ const client = new Discord.Client()
 const officehours = require('./officehours')
 
 client.on('message', message => {
-    const cmd = message.content.split(" ")[0]
-    const args = args.splice(0, 1)
+    var args = message.content.splice(" ")
+    const cmd = args[0]
+    args.splice(0, 1)
 
     switch(cmd) {
         case "next":
