@@ -35,9 +35,12 @@ exports.onQueue = (client, message) => {
             var waitTime = moment(queue[i].timestamp).fromNow()
             var desc = queue[i].desc
 
-            body += `\t#${i}\t${username}\t${desc} \t(${waitTime})\n`
+            body += `${i}) ${username}\t${desc} \t\t${waitTime}\n`
         }
-        message.channel.send(body, embed=true)
+        message.channel.send({embed: {
+            color: 3447003,
+            description: body
+        }})
         return
     } else if (CHANNEL == message.channel.id) {
         const index = positionInQueue(message.author)
