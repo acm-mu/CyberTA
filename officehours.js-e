@@ -38,7 +38,7 @@ exports.onQueue = (client, message) => {
                 body += `${i}) ${username}, " ${desc} ", ${waitTime}\n`
             }
         }
-        message.channel.send("```" + body + "```")
+        message.channel.send("```nimrod\n" + body + "```")
         return
     } else if (CHANNEL == message.channel.id) {
         const index = positionInQueue(message.author)
