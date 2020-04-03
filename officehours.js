@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 var queue = []
-
+var x = 0;
 const CHANNEL = "695206607008694302"
 const TA_CHANNEL = "695206670883618827"
 
@@ -86,7 +86,8 @@ exports.onReady = (client, message) => {
 }
 
 exports.onWow = (client, message, args) => {
-     message.reply("Hello")
+     x++;
+     message.reply("There have been " + x + " 'interesting' questions to date.")
     //message.reply(`You are now #${queue.length} in the queue.`)
 }
 
