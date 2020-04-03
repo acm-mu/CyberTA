@@ -38,7 +38,7 @@ exports.onQueue = (client, message) => {
                 var waitTime = moment(queue[i].timestamp).fromNow()
                 var desc = queue[i].desc
 
-                body += `${i}) ${username}, ${desc}, ${waitTime}\n`
+                body += `${i}) ${username}, " ${desc} ", ${waitTime}\n`
             }
         }
         message.channel.send({embed: {
