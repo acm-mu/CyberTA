@@ -26,7 +26,7 @@ function ready(message, index) {
 
 function contains(member) {
     for (var i = 0; i < queue.length; i++) 
-        if (queue.member.id == member.id) 
+        if (queue[i].member.id == member.id) 
             return true
     return false
 }
