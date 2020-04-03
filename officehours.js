@@ -1,12 +1,49 @@
 const moment = require('moment')
 
 var queue = []
+var dequeued = []
 var x = 0;
 const CHANNEL = "695206607008694302"
 const TA_CHANNEL = "695206670883618827"
 
+const tas = {
+    "411720574528913418": "Brad",
+    "117015211952570374": "Jack",
+    "97501254363664384": "Avery",
+    "375835699037077515": "Patrick"
+}
+
+function ready(message, index) {
+    var msg = queue[index].message
+    msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
+    msg.delete()
+
+    queue.splice(index, 1)
+
+    message.react("👍")
+    message.reply(`There are now ${queue.length} people on the queue.`)
+}
+
+function contains(member) {
+    for (var i = 0; i < queue.length; i++) 
+        if (queue.member.id == member.id) 
+            return true
+    return false
+}
+
 exports.onNext = (client, message, args) => {
     if (message.channel.id != CHANNEL) return // Behavior is only in the os-office-hours channel
+    
+    if (contains(message.author)) {
+        message.react("🛑")
+        message.reply("You are already on the queue.")
+            .then(msg => {
+                msg.delete( { timeout: 5000 })
+                message.delete({ timeout: 5000 })
+            })
+        return
+    }
+
     queue.push({
         member: message.author,
         desc: args.join(" "),
@@ -20,6 +57,12 @@ exports.onNext = (client, message, args) => {
        .then(msg => {
             msg.delete({ timeout: 5000 }) 
         })
+}
+
+exports.onUndo = (client, message) => {
+    if (TA_CHANNEL = message.channel.id) {
+
+    }
 }
 
 exports.onQueue = (client, message) => {
@@ -50,15 +93,7 @@ exports.onRemove = (client, message, args) => {
         return
     }
     var index = parseInt(args[0])
-
-    var msg = queue[index].message
-    msg.reply(`${message.author.username} is ready for you. Move to TA office.`)
-    msg.delete()
-
-    queue.splice(index, 1)
-
-    message.react("👍")
-    message.reply(`There are now ${queue.length} people on the queue.`)
+    ready(message, index);
 }
 
 exports.onReady = (client, message) => {
@@ -69,14 +104,7 @@ exports.onReady = (client, message) => {
         return
     }
 
-    var next = queue[0]
-    next.message.reply(`${message.author.username} is ready for you. Move to TA Office`)
-    next.message.delete()
-
-    queue.splice(0, 1)
-
-    message.react("👍")
-    message.reply(`There are now ${queue.length} people on the queue.`)
+    ready(message, 0)
 }
 
 exports.onOof = (client, message, args) => {

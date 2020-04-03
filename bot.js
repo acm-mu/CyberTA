@@ -19,6 +19,9 @@ client.on('message', message => {
         case "!queue":
             officehours.onQueue(client, message)
             break
+        case "!undo":
+            officehours.onUndo(client, message)
+            break
         case "!remove":
             officehours.onRemove(client, message, args)
             break
