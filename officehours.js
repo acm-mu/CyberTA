@@ -1,10 +1,11 @@
 const moment = require('moment')
+var x = 0;
 
 var queue = []
 var dequeued = []
-var x = 0;
-const CHANNEL = "695206607008694302"
-const TA_CHANNEL = "695206670883618827"
+
+const OFFICE_HOURS = process.env.OFFICE_HOURS
+const TA_CHANNEL = process.env.TA_CHANNEL
 
 const tas = {
     ***REMOVED***
@@ -18,6 +19,7 @@ function ready(message, index) {
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
 
+    dequeued.push(queue[index])
     queue.splice(index, 1)
 
     message.react("👍")
@@ -32,7 +34,7 @@ function contains(member) {
 }
 
 exports.onNext = (client, message, args) => {
-    if (message.channel.id != CHANNEL) return // Behavior is only in the os-office-hours channel
+    if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
     if (contains(message.author)) {
         message.react("🛑")
@@ -61,7 +63,13 @@ exports.onNext = (client, message, args) => {
 
 exports.onUndo = (client, message) => {
     if (TA_CHANNEL = message.channel.id) {
-
+        if (dequeued.length == 0) {
+            message.react("🛑")
+            message.reply("```There is currently nothing in the dequeue cache.```")
+            return
+        }
+        queue.splice(0, 1, dequeued.pop())
+        message.reply("```All Done! Don't screw up next time!")
     }
 }
 
@@ -116,7 +124,7 @@ exports.onOof = (client, message, args) => {
 
 
 exports.onHelp = (client, message) => {
-    if (CHANNEL == message.channel.id)
+    if (OFFICE_HOURS == message.channel.id)
         message.reply("To join the queue, type ```next``` or ```!next``` followed by a brief description of what you need help with.")
     else
         message.reply("!queue to view the queue. !remove <index> to remove user, and notify them you're ready.")
