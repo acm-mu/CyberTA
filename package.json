@@ -1,13 +1,13 @@
 {
-    "name": "ta-bot",
-    "description": "Operating Systems office hours Discord bot",
-    "version": "0.0.0",
-    "main": "bot.js",
-    "scripts": {
-      "start": "node bot.js"
-    },
-    "dependencies": {
-      "discord.js": "12.0.0",
-      "request": "2.81.0"
-    }
+  "name": "ta-bot",
+  "description": "Operating Systems office hours Discord bot",
+  "version": "0.0.0",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "12.0.0",
+    "request": "2.81.0"
   }
+}
