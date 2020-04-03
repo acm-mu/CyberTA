@@ -27,13 +27,13 @@ exports.onQueue = (client, message) => {
     message.channel.send(`There are currently ${queue.length} people in the queue.`)
     
     if (message.channel.id == TA_CHANNEL) {
-        var body = "";
+        var body = "` ";
         for (var i = 0; i < queue.length; i++) {
-            var username = queue[i].member.name
+            var username = queue[i].member.username
             var waitTime = moment(queue[i].timestamp).fromNow()
             var desc = queue[i].desc
 
-            body += `\t#${i}\t${username}\t${waitTime}\n\t\t${desc}\n`
+            body += `\t#${i}\t${username}\t${desc} \t(${waitTime})\n`
         }
         message.channel.send(body)
         return
