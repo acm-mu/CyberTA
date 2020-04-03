@@ -20,14 +20,14 @@ exports.onNext = (client, message, args) => {
     console.log(message.author)
 
     message.react("👍")
-    message.reply(`You are now #${queue.length} in the queue.`)
+    //message.reply(`You are now #${queue.length} in the queue.`)
 }
 
 exports.onQueue = (client, message) => {
     message.channel.send(`There are currently ${queue.length} people in the queue.`)
     
     if (message.channel.id == TA_CHANNEL) {
-        var body = "` ";
+        var body = "``` ";
         for (var i = 0; i < queue.length; i++) {
             var username = queue[i].member.username
             var waitTime = moment(queue[i].timestamp).fromNow()
