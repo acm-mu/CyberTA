@@ -224,6 +224,7 @@ exports.onOnline = (message, args) => {
         }
         else {
           tas[message.author.id].online_status = 1
+          message.reply("You are now online.")
         }
         
        
@@ -233,11 +234,18 @@ exports.onOnline = (message, args) => {
 }
 
 exports.onOffline = (message, args) => {
-    if (TA_CHANNEL == message.channel.id) {
-        if(tas[message.author.id].online)
-        message.reply("You are now offline.");
+   if (TA_CHANNEL == message.channel.id) {
+        if(tas[message.author.id].online_status == 0) {
+            message.reply("You are already offline.")
+        }
+        else {
+          tas[message.author.id].online_status = 0
+          message.reply("You are now offline. ")
+        }
+        
+       
+        
     }
-    
 }
 
 
