@@ -235,7 +235,7 @@ exports.onOnline = (message, args, client) => {
     
 }
 
-exports.onOffline = (message, args) => {
+exports.onOffline = (message, args, client) => {
    if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 0) {
             message.reply("You are already offline.")
