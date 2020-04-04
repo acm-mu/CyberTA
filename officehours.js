@@ -132,7 +132,7 @@ exports.onReady = (client, message) => {
         message.reply("The queue is empty right now, crack open a beer")
         return
     }
-    msg.reply('Time spent with user: ' + queue[index].timestamp) 
+    message.reply('Time spent with user: ' + queue[index].timestamp) 
     ready(message, 0)
 }
 
