@@ -4,6 +4,7 @@ const NAK = "🛑"
 const moment = require('moment')
 var online = false;
 var offline = true;
+var numberOfTA = 0;
 
 var queue = []
 var dequeued = []
@@ -84,6 +85,7 @@ function contains(member) {
  */
 
 exports.onNext = (message, args) => {
+    if (numberOfTA != 5) {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
     if (contains(message.author)) {
@@ -109,6 +111,9 @@ exports.onNext = (message, args) => {
        .then(msg => {
             msg.delete({ timeout: 10 * 1000 }) 
         })
+    }
+    else
+        message.reply("Sorry there are no TA's on.")
 }
 
 /**
@@ -214,6 +219,7 @@ exports.onOof = (message, args) => {
 
 exports.onOnline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
+        numberofTA++;
         online = true;
         offline = false;
         message.reply("You are now online @ " + new Date());
@@ -223,6 +229,7 @@ exports.onOnline = (message, args) => {
 
 exports.onOffline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
+        numberOfTA--;
         online = false;
         offline = true;
         message.reply("You are now offline @ " + new Date());
