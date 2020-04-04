@@ -73,7 +73,7 @@ function index(member) {
 }
 
 function contains(member) {
-    return index(member) == -1
+    return index(member) != -1
 }
 
 /**
@@ -214,7 +214,7 @@ exports.onOof = (message, args) => {
 exports.onHelp = (message) => {
     if (TA_CHANNEL == message.channel.id) {
         message.reply("``` \
-            \nping - simple test that responds with \"pong\". \
+            ping - simple test that responds with \"pong\". \
             \n!queue - view the queue w/ username, issue description, and how long they've been waiting. \
             \n!undo - quickly undo the ready command that removed them from the queue. \
             \n!remove <index> - removes user from queue at certain index. Does not alert the user. \
@@ -223,7 +223,7 @@ exports.onHelp = (message) => {
         return
     }
     message.reply("``` \
-        \nnext [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue. \
+        next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue. \
         \nhelp - provides a list of commands and their functions.```")
         
 }
