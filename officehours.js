@@ -63,11 +63,15 @@ function ready(message, index) {
  
 }
 
-function contains(member) {
-    for (var i = 0; i < queue.length; i++) 
-        if (queue[i].member.id == member.id) 
+function index(member) {
+    for (var i = 0; i < queue.length; i++)
+        if (queue[i].member.id == member.id)
             return true
     return false
+}
+
+function contains(member) {
+    return index(member) == -1
 }
 
 /**
