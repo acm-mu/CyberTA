@@ -87,6 +87,11 @@ function queueContents(client, message) {
     return
 }
 
+function remove(client, message) {
+    var msg = queue[index].message
+    msg.delete()
+}
+
 /**
  * Users can add themselves to the queue via the next command. If users are 
  * already on the queue, it will let them know and quit. The bot will also
@@ -192,7 +197,7 @@ exports.onClear = (client, message) => {
         return
     }
 
+    queue.forEach(remove)
     queue = []
-
     queueContents(client, client)
 }
