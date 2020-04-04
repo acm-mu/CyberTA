@@ -194,6 +194,20 @@ exports.onOof = (message, args) => {
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
 
+exports.onHelp = (message) => {
+    if (TA_CHANNEL == message.channel.id) {
+        message.reply("```nimrod\n \
+            ping - simple test that responds with \"pong\".\n \
+            !queue - view the queue w/ username, issue description, and how long they've been waiting.\n \
+            !undo - quickly undo the ready command that removed them from the queue.\n \
+            !remove <index> - removes user from queue at certain index. Does not alert the user.\n \
+            !ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n \
+            !help - shows these commands.")
+        return
+    }
+    message.reply("```nimrod \
+        next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n \
+        help - provides a list of commands and their functions.")
 
 exports.onHelp = (client, message) => {
     if (OFFICE_HOURS == message.channel.id)
