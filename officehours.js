@@ -52,7 +52,7 @@ function ready(message, index) {
     message.reply("You have spent " + timespent +  " minutes with that team. " + `. ` + (queue.length - 1) +" people on the queue.");
     }
     else {
-        message.reply(queue.length - 1) +" people on the queue.");
+        message.reply((queue.length - 1) +" people on the queue.");
     }
     
     dequeued.push(queue[index])
