@@ -31,6 +31,7 @@ const tas = {
         last_helped_time: 0
     },
 }
+
 function ready(message, index) {
 
     /**
@@ -38,20 +39,21 @@ function ready(message, index) {
      * This will be a permenant skip, and will not add it to the dequeue cache.
      */
 
+     if (index >= queue.length) return
+
     var msg = queue[index].message
     msg.reply(`${tas[message.author.id].name} is ready for you. Move to TA office.`)
     msg.delete()
     
     //Tells you time spent and people on queue.
     if ( tas[message.author.id].last_helped_time != 0) {
-    startTime = tas[message.author.id].last_helped_time
-    endTime = new Date();
-    var timeDiff = endTime - startTime; //in ms
-    timeDiff /= 1000;
-    var timespent = Math.round(timeDiff) / 60;
-    message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.");
-    }
-    else {
+        startTime = tas[message.author.id].last_helped_time
+        endTime = new Date();
+        var timeDiff = endTime - startTime; //in ms
+        timeDiff /= 1000;
+        var timespent = Math.round(timeDiff) / 60;
+        message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.");
+    } else {
         message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.");
     }
     
@@ -59,8 +61,7 @@ function ready(message, index) {
     queue.splice(index, 1)
     tas[message.author.id].last_helped_time = new Date();
     
-    message.react("👍")
- 
+    message.react(ACK)
 }
 
 function index(member) {
