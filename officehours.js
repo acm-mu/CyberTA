@@ -132,7 +132,13 @@ exports.onReady = (client, message) => {
         message.reply("The queue is empty right now, crack open a beer")
         return
     }
-    message.reply('Time spent with user: ' + queue[0].timestamp) 
+    //TO:DO calculate time spent with user.
+  startTime = queue[0].timestamp
+  endTime = new Date();
+  var timeDiff = endTime - startTime; //in ms
+  timeDiff /= 1000;
+  var seconds = Math.round(timeDiff);
+  message.reply(seconds + " seconds");
     ready(message, 0)
 }
 
