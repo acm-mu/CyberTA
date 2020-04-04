@@ -1,10 +1,11 @@
+const ACK = "👍"
+const NAK = "🛑"
+
 const moment = require('moment')
 var x = 0
 
 var queue = []
 var dequeued = []
-
-var d = new Date();
 
 const OFFICE_HOURS = process.env.OFFICE_HOURS
 const TA_CHANNEL = process.env.TA_CHANNEL
