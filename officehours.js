@@ -189,8 +189,8 @@ exports.onReady = (message, args) => {
     ready(message, index)
 }
 
-exports.onOof = (client, message, args) => {
-     x++;
+exports.onOof = (message, args) => {
+     x++
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
 
