@@ -25,17 +25,19 @@ function ready(message, index) {
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
 
+     startTime = queue[index].timestamp
+    endTime = new Date();
+    var timeDiff = endTime - startTime; //in ms
+    timeDiff /= 1000;
+    var timespent = Math.round(timeDiff/ 60);
+    message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ${queue.length} people on the queue.`);
+    
     
     dequeued.push(queue[index])
     queue.splice(index, 1)
     
     message.react("👍")
-  startTime = queue[index].timestamp
-  endTime = new Date();
-  var timeDiff = endTime - startTime; //in ms
-  timeDiff /= 1000;
-  var timespent = Math.round(timeDiff/ 60) ;
-  message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ${queue.length} people on the queue.`);
+ 
 }
 
 function contains(member) {
