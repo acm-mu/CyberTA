@@ -138,7 +138,7 @@ exports.onReady = (client, message) => {
   var timeDiff = endTime - startTime; //in ms
   timeDiff /= 1000;
   var timespent = Math.round(timeDiff/ 60) ;
-  message.reply("You have spent " + timespent +  " minutes with " + queue[0].member);
+  message.reply("You have spent " + timespent +  " minutes with " + (queue[0].member.toString()));
     ready(message, 0)
 }
 
