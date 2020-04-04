@@ -49,7 +49,7 @@ function ready(message, index) {
     var timeDiff = endTime - startTime; //in ms
     timeDiff /= 1000;
     var timespent = Math.round(timeDiff) / 60;
-    message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ` + (queue.length - 1) +" people on the queue.");
+    message.reply("You have spent " + timespent +  " minutes with that team. " + `. ` + (queue.length - 1) +" people on the queue.");
     }
     else {
         message.reply(queue.length - 1) +" people on the queue.");
