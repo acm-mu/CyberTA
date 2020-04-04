@@ -4,6 +4,9 @@ var x = 0
 var queue = []
 var dequeued = []
 
+var d = new Date();
+d.setHours(0,0,0,0);
+
 const OFFICE_HOURS = process.env.OFFICE_HOURS
 const TA_CHANNEL = process.env.TA_CHANNEL
 
@@ -11,22 +14,22 @@ const tas = {
     "411720574528913418": {
         name: "Brad",
         last_helped_id: null,
-        last_helped_time: null
+        last_helped_time: d
     },
     "117015211952570374": {
         name: "Jack",
         last_helped_id: null,
-        last_helped_time: null
+        last_helped_time: d
     },
     "97501254363664384": {
         name: "Avery",
         last_helped_id: null,
-        last_helped_time: null
+        last_helped_time: d
     },
     "375835699037077515": {
         name: "Patrick",
         last_helped_id: null,
-        last_helped_time: null
+        last_helped_time: d
     },
 }
 function ready(message, index) {
