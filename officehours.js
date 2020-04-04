@@ -30,7 +30,7 @@ function ready(message, index) {
     var timeDiff = endTime - startTime; //in ms
     timeDiff /= 1000;
     var timespent = Math.round(timeDiff/ 60);
-    message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ${queue.length} people on the queue.`);
+    message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `.` + queue.length +" people on the queue.");
     
     
     dequeued.push(queue[index])
