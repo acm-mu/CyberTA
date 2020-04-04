@@ -5,7 +5,6 @@ var queue = []
 var dequeued = []
 
 var d = new Date();
-d.setHours(0,0,0,0);
 
 const OFFICE_HOURS = process.env.OFFICE_HOURS
 const TA_CHANNEL = process.env.TA_CHANNEL
@@ -14,22 +13,22 @@ const tas = {
     "411720574528913418": {
         name: "Brad",
         last_helped_id: null,
-        last_helped_time: d
+        last_helped_time: 0
     },
     "117015211952570374": {
         name: "Jack",
         last_helped_id: null,
-        last_helped_time: d
+        last_helped_time: 0
     },
     "97501254363664384": {
         name: "Avery",
         last_helped_id: null,
-        last_helped_time: d
+        last_helped_time: 0
     },
     "375835699037077515": {
         name: "Patrick",
         last_helped_id: null,
-        last_helped_time: d
+        last_helped_time: 0
     },
 }
 function ready(message, index) {
@@ -40,7 +39,7 @@ function ready(message, index) {
      */
 
     var msg = queue[index].message
-    msg.reply(`${tas[message.author.name]} is ready for you. Move to TA office.`)
+    msg.reply(`${tas[message.author].name} is ready for you. Move to TA office.`)
     msg.delete()
     
     //Tells you time spent and people on queue.
