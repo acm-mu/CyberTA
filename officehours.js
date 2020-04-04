@@ -9,10 +9,26 @@ const OFFICE_HOURS = process.env.OFFICE_HOURS
 const TA_CHANNEL = process.env.TA_CHANNEL
 
 const tas = {
-    "411720574528913418": "Brad",
-    "117015211952570374": "Jack",
-    "97501254363664384": "Avery",
-    "375835699037077515": "Patrick"
+    "411720574528913418": {
+        name: "Brad",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "117015211952570374": {
+        name: "Jack",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "97501254363664384": {
+        name: "Avery",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "375835699037077515": {
+        name: "Patrick",
+        last_helped_id: null,
+        last_helped_time: null
+    },
 }
 function assignTA(help) {
     if (help == "411720574528913418")
