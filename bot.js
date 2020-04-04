@@ -46,7 +46,7 @@ client.on('message', message => {
             break 
         case "!offline":
             officehours.onOffline(message, args)
-            client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author = "is now online.")
+            client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author + "is now offline.")
             break     
         case "!ready":
         case "ready":
