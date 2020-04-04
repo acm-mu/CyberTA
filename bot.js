@@ -15,6 +15,10 @@ client.on('message', message => {
         case "ping":
             message.reply("Pong!")
             break
+        case "clear":
+        case "!clear":
+            officehours.onClear(client, message)
+            break
         case "next":
         case "!next":
             officehours.onNext(client, message, args)

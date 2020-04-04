@@ -70,6 +70,23 @@ function contains(member) {
     return false
 }
 
+function queueContents(client, message) {
+    var body = ""
+    if (queue.length == 0) {
+        body = "The queue is empty right now! :D"
+    } else {
+        for (var i = 0; i < queue.length; i++) {
+            var username = queue[i].member.username
+            var waitTime = moment(queue[i].timestamp).fromNow()
+            var desc = queue[i].desc
+
+            body += `${i}) ${username}, " ${desc} ", ${waitTime}\n`
+        }
+    }
+    message.channel.send("```nimrod\n" + body + "```")
+    return
+}
+
 /**
  * Users can add themselves to the queue via the next command. If users are 
  * already on the queue, it will let them know and quit. The bot will also
@@ -127,20 +144,7 @@ exports.onUndo = (client, message) => {
 
 exports.onQueue = (client, message) => {
     if (TA_CHANNEL == message.channel.id) {
-        var body = ""
-        if (queue.length == 0) {
-            body = "The queue is empty right now! :D"
-        } else {
-            for (var i = 0; i < queue.length; i++) {
-                var username = queue[i].member.username
-                var waitTime = moment(queue[i].timestamp).fromNow()
-                var desc = queue[i].desc
-
-                body += `${i}) ${username}, " ${desc} ", ${waitTime}\n`
-            }
-        }
-        message.channel.send("```nimrod\n" + body + "```")
-        return
+        queueContents(client, message)
     }
 }
 
@@ -178,4 +182,17 @@ exports.onHelp = (client, message) => {
         message.reply("To join the queue, type ```next``` or ```!next``` followed by a brief description of what you need help with.")
     else
         message.reply("!queue to view the queue. !remove <index> to remove user, and notify them you're ready.")
+}
+
+exports.onClear = (client, message) => {
+    if (TA_CHANNEL != message.channel.id) return
+
+    if (queue.length == 0) {
+        message.reply("The queue is already empty!")
+        return
+    }
+
+    queue = []
+
+    queueContents(client, client)
 }
