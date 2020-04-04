@@ -80,14 +80,14 @@ function contains(member) {
  * let them know on success
  */
 
-exports.onNext = (client, message, args) => {
+exports.onNext = (message, args) => {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
     if (contains(message.author)) {
-        message.react("🛑")
+        message.react(NAK)
         message.reply("You are already on the queue.")
             .then(msg => {
-                msg.delete( { timeout: 5000 })
+                msg.delete({ timeout: 5000 })
                 message.delete({ timeout: 5000 })
             })
         return
@@ -100,7 +100,7 @@ exports.onNext = (client, message, args) => {
         timestamp: new Date()
     })
 
-    message.react("👍")
+    message.react(ACK)
 
     message.reply(`You are now #${queue.length} in the queue.`)
        .then(msg => {
