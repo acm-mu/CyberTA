@@ -217,7 +217,7 @@ exports.onOof = (message, args) => {
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
 
-exports.onOnline = (message, args) => {
+exports.onOnline = (message, args, client) => {
     if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 1) {
             message.reply("You are already online.")
@@ -225,6 +225,7 @@ exports.onOnline = (message, args) => {
         else {
           tas[message.author.id].online_status = 1
           TAon++;
+          client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
           message.reply("You are now online.")
         }
         
@@ -242,6 +243,7 @@ exports.onOffline = (message, args) => {
         else {
           tas[message.author.id].online_status = 0
           TAon--;
+          client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
           message.reply("You are now offline. ")
         }
         
