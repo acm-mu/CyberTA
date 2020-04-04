@@ -168,15 +168,25 @@ exports.onRemove = (message, args) => {
     queue.splice(index, 1)
 }
 
-exports.onReady = (client, message) => {
+exports.onReady = (message, args) => {
     if (TA_CHANNEL != message.channel.id) return
 
     if (queue.length == 0) {
-        message.reply("The queue is empty right now, crack open a beer")
+        message.channel.send("```nimrod\nThe queue is currently empty```")
         return
     }
-    //TO:DO calculate time spent with user.
-    ready(message, 0)
+
+    var index = 0
+    if (args.length > 0 && !isNaN(args[0]))
+        index = parseInt(args[0])
+    
+    if (index >= queue.length) {
+        message.react(NAK)
+        message.reply("Invalid index.")
+        return
+    }
+
+    ready(message, index)
 }
 
 exports.onOof = (client, message, args) => {
