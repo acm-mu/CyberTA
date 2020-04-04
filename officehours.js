@@ -222,7 +222,7 @@ exports.onOnline = (message, args) => {
         TAon++;
         online = true;
         offline = false;
-        message.reply("You are now online @ " + new Date());
+        message.reply("You are now online.");
     }
     
 }
@@ -232,7 +232,7 @@ exports.onOffline = (message, args) => {
         TAon--;
         online = false;
         offline = true;
-        message.reply("You are now offline @ " + new Date());
+        message.reply("You are now offline.");
     }
     
 }
