@@ -216,7 +216,7 @@ exports.onOnline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
         online = true;
         offline = false;
-        message.reply("You are now online @ + " + new Date());
+        message.reply("You are now online @ " + new Date());
     }
     
 }
@@ -225,7 +225,8 @@ exports.onOffline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
         online = false;
         offline = true;
-        message.reply("You are now offline @ + " + new Date());
+        message.reply("You are now offline @ " + new Date());
+        channels.cache.get(TA_CHANNEL).send("Hello");
     }
     
 }
