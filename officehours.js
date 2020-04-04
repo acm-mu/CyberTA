@@ -40,7 +40,7 @@ function ready(message, index) {
      */
 
     var msg = queue[index].message
-    msg.reply(`${tas[message.author.id.name]} is ready for you. Move to TA office.`)
+    msg.reply(`${tas[message.author.name]} is ready for you. Move to TA office.`)
     msg.delete()
     
     //Tells you time spent and people on queue.
@@ -48,7 +48,7 @@ function ready(message, index) {
     endTime = new Date();
     var timeDiff = endTime - startTime; //in ms
     timeDiff /= 1000;
-    var timespent = Math.round(timeDiff/ 60);
+    var timespent = Math.round(timeDiff) / 60;
     message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ` + (queue.length - 1) +" people on the queue.");
     
     
