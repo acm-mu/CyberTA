@@ -15,22 +15,22 @@ const TA_CHANNEL = process.env.TA_CHANNEL
 const tas = {
     "***REMOVED***": {
         name: "***REMOVED***",
-        last_helped_id: null,
+        online_status: 0,
         last_helped_time: 0
     },
     "***REMOVED***": {
         name: "***REMOVED***",
-        last_helped_id: null,
+        online_status: 0,
         last_helped_time: 0
     },
     "***REMOVED***": {
         name: "***REMOVED***",
-        last_helped_id: null,
+        online_status: 0,
         last_helped_time: 0
     },
     "***REMOVED***": {
         name: "***REMOVED***",
-        last_helped_id: null,
+        online_status: 0,
         last_helped_time: 0
     },
 }
@@ -219,16 +219,23 @@ exports.onOof = (message, args) => {
 
 exports.onOnline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
-        TAon++;
-        online = true;
-        offline = false;
-        message.reply("You are now online.");
+        if(tas[message.author.id].online_status == 1) {
+            message.reply("You are already online.")
+        }
+        else {
+          TAon++;  
+          tas[message.author.id].online_status = 1
+        }
+        
+       
+        
     }
     
 }
 
 exports.onOffline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
+        if(tas[message.author.id].online
         TAon--;
         online = false;
         offline = true;
