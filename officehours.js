@@ -176,6 +176,6 @@ exports.onOof = (client, message, args) => {
 exports.onHelp = (client, message) => {
     if (OFFICE_HOURS == message.channel.id)
         message.reply("To join the queue, type ```next``` or ```!next``` followed by a brief description of what you need help with.")
-    else if (TA_CHANNEL == message.channel.id)
+    else
         message.reply("!queue to view the queue. !remove <index> to remove user, and notify them you're ready.")
 }
