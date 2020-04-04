@@ -42,12 +42,10 @@ client.on('message', message => {
             officehours.onOof(message, args)
             break 
         case "!online":
-            officehours.onOnline(message, args)
-            client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
+            officehours.onOnline(message, args, client)
             break 
         case "!offline":
-            officehours.onOffline(message, args)
-            client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
+            officehours.onOffline(message, args, client)
             break     
         case "!ready":
         case "ready":
