@@ -25,8 +25,6 @@ function ready(message, index) {
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
 
-    var timespent = queue[index].timestamp
-    msg.reply('Time spent with user: ' + x) 
     dequeued.push(queue[index])
     queue.splice(index, 1)
     
@@ -134,7 +132,7 @@ exports.onReady = (client, message) => {
         message.reply("The queue is empty right now, crack open a beer")
         return
     }
-
+    msg.reply('Time spent with user: ' + queue[index].timestamp) 
     ready(message, 0)
 }
 
