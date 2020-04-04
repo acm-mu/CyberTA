@@ -4,7 +4,7 @@ const NAK = "🛑"
 const moment = require('moment')
 var online = false;
 var offline = true;
-var numberOfTA = 0;
+var TAon = 0;
 
 var queue = []
 var dequeued = []
@@ -85,7 +85,7 @@ function contains(member) {
  */
 
 exports.onNext = (message, args) => {
-    if (numberOfTA != 0) {
+    if (TAon != 0) {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
     if (contains(message.author)) {
@@ -219,7 +219,7 @@ exports.onOof = (message, args) => {
 
 exports.onOnline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
-        numberofTA++;
+        TAon++;
         online = true;
         offline = false;
         message.reply("You are now online @ " + new Date());
@@ -229,7 +229,7 @@ exports.onOnline = (message, args) => {
 
 exports.onOffline = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
-        numberOfTA--;
+        TAon--;
         online = false;
         offline = true;
         message.reply("You are now offline @ " + new Date());
