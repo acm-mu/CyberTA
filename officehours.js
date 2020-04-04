@@ -119,7 +119,7 @@ exports.onNext = (message, args) => {
  * There is currently no Bot process for letting the user know it was an accident
  */
 
-exports.onUndo = (message) => {
+exports.onUndo = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
         if (dequeued.length == 0) {
             message.react(NAK)
@@ -132,7 +132,7 @@ exports.onUndo = (message) => {
     }
 }
 
-exports.onQueue = (message) => {
+exports.onQueue = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
         if (queue.length == 0) {
             message.channel.send("```nimrod\nThe queue is currently empty```")
@@ -151,7 +151,7 @@ exports.onQueue = (message) => {
 }
 
 // This potentially could be where the TA-leave functionality goes
-exports.onLeave = (message) => {
+exports.onLeave = (message, args) => {
     if (OFFICE_HOURS == message.channel.id) {
         if (!contains(message.author)) {
             message.react(NAK);
@@ -211,7 +211,7 @@ exports.onOof = (message, args) => {
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
 
-exports.onHelp = (message) => {
+exports.onHelp = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
         message.reply("``` \
             ping - simple test that responds with \"pong\". \
