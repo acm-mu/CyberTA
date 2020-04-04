@@ -68,8 +68,8 @@ function ready(message, index) {
 function index(member) {
     for (var i = 0; i < queue.length; i++)
         if (queue[i].member.id == member.id)
-            return true
-    return false
+            return i
+    return -1
 }
 
 function contains(member) {
@@ -156,7 +156,12 @@ exports.onLeave = (message) => {
         if (!contains(message.author)) {
             message.react(NAK);
             message.delete({ timeout: 10 * 1000 })
-        return
+            return
+        }
+
+        queue.splice(index(message.author), 1)
+        message.react(ACK)
+        message.delete({ timeout: 10 * 1000 })
     }
 }
 
@@ -220,10 +225,5 @@ exports.onHelp = (message) => {
     message.reply("```nimrod \
         next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n \
         help - provides a list of commands and their functions.")
-
-exports.onHelp = (client, message) => {
-    if (OFFICE_HOURS == message.channel.id)
-        message.reply("To join the queue, type ```next``` or ```!next``` followed by a brief description of what you need help with.")
-    else
-        message.reply("!queue to view the queue. !remove <index> to remove user, and notify them you're ready.")
+        
 }
