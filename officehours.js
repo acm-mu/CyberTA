@@ -25,9 +25,11 @@ function ready(message, index) {
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
 
+    var timespent = queue[index].timestamp
+    msg.reply('Time spent with user: ' + x) 
     dequeued.push(queue[index])
     queue.splice(index, 1)
-
+    
     message.react("👍")
     message.reply(`There are now ${queue.length} people on the queue.`)
 }
