@@ -1,6 +1,5 @@
 const moment = require('moment')
 var x = 0
-var ta = 4
 
 var queue = []
 var dequeued = []
@@ -30,17 +29,6 @@ const tas = {
         last_helped_time: null
     },
 }
-function assignTA(help) {
-    if (help == "***REMOVED***")
-        ta = 0;
-    else if (help == "***REMOVED***")
-        ta = 1;
-    else if(help == "***REMOVED***")
-        ta = 2;
-    else if (help == "***REMOVED***")
-        ta = 3;
-}
-
 function ready(message, index) {
 
     /**
@@ -53,7 +41,7 @@ function ready(message, index) {
     msg.delete()
     
     //Tells you time spent and people on queue.
-    startTime = queue[index].timestamp
+    startTime = tas[message.author.id].last_helped_time
     endTime = new Date();
     var timeDiff = endTime - startTime; //in ms
     timeDiff /= 1000;
@@ -63,6 +51,7 @@ function ready(message, index) {
     
     dequeued.push(queue[index])
     queue.splice(index, 1)
+    tas[message.author.id].last_helped_time = new Date();
     
     message.react("👍")
  
