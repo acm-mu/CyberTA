@@ -17,31 +17,35 @@ client.on('message', message => {
     args.splice(0, 1)
 
     switch(cmd) {
+        case "!ping":
         case "ping":
             message.reply("Pong!")
             break
         case "next":
         case "!next":
-            officehours.onNext(client, message, args)
+            officehours.onNext(message, args)
+            break
+        case "!leave":
+            officehours.onLeave(message)
             break
         case "!queue":
-            officehours.onQueue(client, message)
+            officehours.onQueue(message)
             break
         case "!undo":
-            officehours.onUndo(client, message)
+            officehours.onUndo(message)
             break
         case "!remove":
-            officehours.onRemove(client, message, args)
+            officehours.onRemove(message, args)
             break
         case "!oof":
-            officehours.onOof(client, message, args)
+            officehours.onOof(message, args)
             break 
         case "!ready":
         case "ready":
-            officehours.onReady(client, message)
+            officehours.onReady(message)
             break
         case "!help":
-            officehours.onHelp(client, message)
+            officehours.onHelp(message)
     }
 })
 
