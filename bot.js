@@ -46,6 +46,7 @@ client.on('message', message => {
             break 
         case "!offline":
             officehours.onOffline(message, args)
+            client.channels.cache.get(process.env.TA_CHANNEL).send("helloooo")
             break     
         case "!ready":
         case "ready":
