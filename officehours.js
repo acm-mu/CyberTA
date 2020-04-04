@@ -148,7 +148,7 @@ exports.onQueue = (message) => {
     }
 }
 
-exports.onRemove = (client, message, args) => {
+exports.onRemove = (message, args) => {
     if (TA_CHANNEL != message.channel.id) return
     
     if (args.length == 0 || isNaN(args[0])) {
@@ -156,8 +156,16 @@ exports.onRemove = (client, message, args) => {
         message.reply("`!remove <index>`")
         return
     }
+
     var index = parseInt(args[0])
-    ready(message, index);
+    if (index >= queue.length) {
+        message.react(NAK)
+        message.reply("Invalid index.")
+        return
+    }
+
+    message.react(ACK)
+    queue.splice(index, 1)
 }
 
 exports.onReady = (client, message) => {
