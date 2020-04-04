@@ -25,11 +25,17 @@ function ready(message, index) {
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
 
+    
     dequeued.push(queue[index])
     queue.splice(index, 1)
     
     message.react("👍")
-    message.reply(`There are now ${queue.length} people on the queue.`)
+  startTime = queue[index].timestamp
+  endTime = new Date();
+  var timeDiff = endTime - startTime; //in ms
+  timeDiff /= 1000;
+  var timespent = Math.round(timeDiff/ 60) ;
+  message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ${queue.length} people on the queue.`);
 }
 
 function contains(member) {
@@ -133,12 +139,6 @@ exports.onReady = (client, message) => {
         return
     }
     //TO:DO calculate time spent with user.
-  startTime = queue[0].timestamp
-  endTime = new Date();
-  var timeDiff = endTime - startTime; //in ms
-  timeDiff /= 1000;
-  var timespent = Math.round(timeDiff/ 60) ;
-  message.reply("You have spent " + timespent +  " minutes with " + (queue[0].member.toString()));
     ready(message, 0)
 }
 
