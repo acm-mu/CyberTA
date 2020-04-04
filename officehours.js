@@ -128,7 +128,7 @@ exports.onUndo = (message) => {
         }
         queue.splice(0, 1, dequeued.pop())
         message.react(ACK)
-        message.reply("```nimrod\nDone! Don't screw up next time!")
+        message.reply("```nimrod\nDone! Don't screw up next time!```")
     }
 }
 
@@ -219,11 +219,11 @@ exports.onHelp = (message) => {
             !undo - quickly undo the ready command that removed them from the queue.\n \
             !remove <index> - removes user from queue at certain index. Does not alert the user.\n \
             !ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n \
-            !help - shows these commands.")
+            !help - shows these commands.```")
         return
     }
-    message.reply("```nimrod \
+    message.reply("```nimrod\n \
         next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n \
-        help - provides a list of commands and their functions.")
+        help - provides a list of commands and their functions.```")
         
 }
