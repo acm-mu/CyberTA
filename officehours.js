@@ -9,10 +9,26 @@ const OFFICE_HOURS = process.env.OFFICE_HOURS
 const TA_CHANNEL = process.env.TA_CHANNEL
 
 const tas = {
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
-    ***REMOVED***
+    "***REMOVED***": {
+        name: "***REMOVED***",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "***REMOVED***": {
+        name: "***REMOVED***",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "***REMOVED***": {
+        name: "***REMOVED***",
+        last_helped_id: null,
+        last_helped_time: null
+    },
+    "***REMOVED***": {
+        name: "***REMOVED***",
+        last_helped_id: null,
+        last_helped_time: null
+    },
 }
 function assignTA(help) {
     if (help == "***REMOVED***")
