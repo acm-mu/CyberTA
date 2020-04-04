@@ -26,13 +26,13 @@ client.on('message', message => {
             officehours.onNext(message, args)
             break
         case "!leave":
-            officehours.onLeave(message)
+            officehours.onLeave(message, args)
             break
         case "!queue":
-            officehours.onQueue(message)
+            officehours.onQueue(message, args)
             break
         case "!undo":
-            officehours.onUndo(message)
+            officehours.onUndo(message, args)
             break
         case "!remove":
             officehours.onRemove(message, args)
@@ -42,10 +42,10 @@ client.on('message', message => {
             break 
         case "!ready":
         case "ready":
-            officehours.onReady(message)
+            officehours.onReady(message, args)
             break
         case "!help":
-            officehours.onHelp(message)
+            officehours.onHelp(message, args)
     }
 })
 
