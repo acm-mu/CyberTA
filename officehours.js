@@ -224,6 +224,7 @@ exports.onOnline = (message, args) => {
         }
         else {
           tas[message.author.id].online_status = 1
+          TAon++;
           message.reply("You are now online.")
         }
         
@@ -240,6 +241,7 @@ exports.onOffline = (message, args) => {
         }
         else {
           tas[message.author.id].online_status = 0
+          TAon--;
           message.reply("You are now offline. ")
         }
         
