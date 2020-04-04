@@ -144,6 +144,15 @@ exports.onQueue = (message) => {
             body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
         }
         message.channel.send("```nimrod\n" + body + "```")
+    }
+}
+
+// This potentially could be where the TA-leave functionality goes
+exports.onLeave = (message) => {
+    if (OFFICE_HOURS == message.channel.id) {
+        if (!contains(message.author)) {
+            message.react(NAK);
+            message.delete({ timeout: 10 * 1000 })
         return
     }
 }
