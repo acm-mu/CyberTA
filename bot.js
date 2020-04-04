@@ -8,8 +8,8 @@ client.on('ready', () => {
 
 client.on('message', message => {
     // Only listen in bot's channels
-    if (!process.env.TA_CHANNEL == message.channel.id 
-        && !process.env.OFFICE_HOURS == message.channel.id) 
+    if (process.env.TA_CHANNEL != message.channel.id 
+        && process.env.OFFICE_HOURS != message.channel.id) 
         return
 
     var args = message.content.split(" ")
