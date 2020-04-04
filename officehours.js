@@ -39,7 +39,7 @@ function ready(message, index) {
      */
 
     var msg = queue[index].message
-    msg.reply(`${tas[message.author].name} is ready for you. Move to TA office.`)
+    msg.reply(`${tas[message.id].name} is ready for you. Move to TA office.`)
     msg.delete()
     
     //Tells you time spent and people on queue.
