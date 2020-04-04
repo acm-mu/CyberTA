@@ -19,7 +19,7 @@ CyberTA uses the following tech:
 
 ### Installation
 
-To be wrriten
+To be written
 ### TO:DOs
 
  - Persistent Queue
