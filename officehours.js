@@ -1,5 +1,6 @@
 const moment = require('moment')
 var x = 0
+var ta = 4
 
 var queue = []
 var dequeued = []
@@ -13,6 +14,16 @@ const tas = {
     "97501254363664384": "Avery",
     "375835699037077515": "Patrick"
 }
+function assignTA(help) {
+    if (help == "411720574528913418")
+        ta = 0;
+    else if (help == "117015211952570374")
+        ta = 1;
+    else if(help == "97501254363664384")
+        ta = 2;
+    else if (help == "375835699037077515")
+        ta = 3;
+}
 
 function ready(message, index) {
 
@@ -24,7 +35,7 @@ function ready(message, index) {
     var msg = queue[index].message
     msg.reply(`${tas[message.author.id]} is ready for you. Move to TA office.`)
     msg.delete()
-
+    
     //Tells you time spent and people on queue.
     startTime = queue[index].timestamp
     endTime = new Date();
