@@ -43,13 +43,17 @@ function ready(message, index) {
     msg.delete()
     
     //Tells you time spent and people on queue.
+    if ( tas[message.author.id].last_helped_time != 0) {
     startTime = tas[message.author.id].last_helped_time
     endTime = new Date();
     var timeDiff = endTime - startTime; //in ms
     timeDiff /= 1000;
     var timespent = Math.round(timeDiff) / 60;
     message.reply("You have spent " + timespent +  " minutes with " + (queue[index].member.toString()) + `. ` + (queue.length - 1) +" people on the queue.");
-    
+    }
+    else {
+        message.reply(queue.length - 1) +" people on the queue.");
+    }
     
     dequeued.push(queue[index])
     queue.splice(index, 1)
