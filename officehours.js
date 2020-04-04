@@ -2,7 +2,8 @@ const ACK = "👍"
 const NAK = "🛑"
 
 const moment = require('moment')
-var x = 0
+var online = false;
+var offline = true;
 
 var queue = []
 var dequeued = []
@@ -210,6 +211,25 @@ exports.onOof = (message, args) => {
      x++
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
+
+exports.onOnline = (message, args) => {
+    if (TA_CHANNEL == message.channel.id) {
+        online = true;
+        offline = false;
+        message.reply("You are now online @ + " + new Date());
+    }
+    
+}
+
+exports.onOffline = (message, args) => {
+    if (TA_CHANNEL == message.channel.id) {
+        online = false;
+        offline = true;
+        message.reply("You are now offline @ + " + new Date());
+    }
+    
+}
+
 
 exports.onHelp = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
