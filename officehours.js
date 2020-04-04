@@ -117,15 +117,16 @@ exports.onNext = (client, message, args) => {
  * There is currently no Bot process for letting the user know it was an accident
  */
 
-exports.onUndo = (client, message) => {
+exports.onUndo = (message) => {
     if (TA_CHANNEL == message.channel.id) {
         if (dequeued.length == 0) {
-            message.react("🛑")
-            message.reply("```There is currently nothing in the dequeue cache.```")
+            message.react(NAK)
+            message.reply("```nimrod\nThere is currently nothing in the dequeue cache.```")
             return
         }
         queue.splice(0, 1, dequeued.pop())
-        message.reply("```All Done! Don't screw up next time!")
+        message.react(ACK)
+        message.reply("```nimrod\nDone! Don't screw up next time!")
     }
 }
 
