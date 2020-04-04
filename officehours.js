@@ -226,8 +226,6 @@ exports.onOffline = (message, args) => {
         online = false;
         offline = true;
         message.reply("You are now offline @ " + new Date());
-        message.channels.cache.get(TA_CHANNEL).send("```nimrod\nThe queue is currently empty```")
-        //channels.cache.get(TA_CHANNEL).send("Hello");
     }
     
 }
