@@ -85,7 +85,7 @@ function contains(member) {
  */
 
 exports.onNext = (message, args) => {
-    if (numberOfTA != 5) {
+    if (numberOfTA != 0) {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
     if (contains(message.author)) {
