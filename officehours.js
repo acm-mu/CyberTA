@@ -4,62 +4,47 @@ const NAK = '🛑';
 const moment = require('moment');
 
 let x = 0;
-let taOn = 0;
 const queue = [];
 const dequeued = [];
 
 const { OFFICE_HOURS, TA_CHANNEL } = process.env;
 
-const tas = {
-  '411720574528913418': {
-    name: 'Brad',
-    last_helped_id: null,
-    last_helped_time: 0,
-  },
-  '117015211952570374': {
-    name: 'Jack',
-    last_helped_id: null,
-    last_helped_time: 0,
-  },
-  '97501254363664384': {
-    name: 'Avery',
-    last_helped_id: null,
-    last_helped_time: 0,
-  },
-  '375835699037077515': {
-    name: 'Patrick',
-    last_helped_id: null,
-    last_helped_time: 0,
-  },
-};
+const onlineTas = { };
+
+function getNickname(message) {
+  return message.guild.member(message.author).nickname;
+}
+
+function isOnline(member) {
+  return member.id in onlineTas;
+}
 
 function ready(message, readyIndex) {
   /**
      * If the next person in the queue is offline, it should skip over them.
      * This will be a permenant skip, and will not add it to the dequeue cache.
      */
-
   if (readyIndex >= queue.length) return;
 
+  const authorId = message.author.id;
   const msg = queue[readyIndex].message;
-  msg.reply(`${tas[message.author.id].name} is ready for you. Move to TA office.`);
+  const nickname = getNickname(message);
+  msg.reply(`${nickname} is ready for you. Move to TA office.`);
   msg.delete();
 
   // Tells you time spent and people on queue.
-  if (tas[message.author.id].last_helped_time !== 0) {
-    const startTime = tas[message.author.id].last_helped_time;
-    const endTime = new Date();
-    let timeDiff = endTime - startTime; // in ms
-    timeDiff /= 1000;
-    const timespent = Math.round(timeDiff) / 60;
-    message.reply(`You have spent ${timespent} minutes with that team. ${queue.length - 1} people on the queue.`);
+  if (onlineTas[authorId].last_helped_time !== 0) {
+    const startTime = onlineTas[authorId].last_helped_time;
+    const duration = moment.duration(startTime);
+    message.reply(`You have spent ${duration.minutes()} minutes with that team. ${queue.length - 1} people on the queue.`);
   } else {
     message.reply(`Readying up. There are ${queue.length - 1} people left on the queue.`);
   }
 
   dequeued.push(queue[readyIndex]);
   queue.splice(readyIndex, 1);
-  tas[message.author.id].last_helped_time = new Date();
+
+  onlineTas[authorId].last_helped_time = new Date();
 
   message.react(ACK);
 }
@@ -86,7 +71,7 @@ function contains(member) {
 exports.onNext = (message, args) => {
   if (message.channel.id !== OFFICE_HOURS) return;
 
-  if (taOn === 0) {
+  if (Object.keys(onlineTas).length === 0) {
     message.reply("Sorry there are no TA's on.");
     return;
   }
@@ -173,6 +158,10 @@ exports.onLeave = (message) => {
 
 exports.onRemove = (message, args) => {
   if (TA_CHANNEL !== message.channel.id) return;
+  if (!isOnline(message.author)) {
+    message.reply("You are offline. Can't remove.");
+    return;
+  }
 
   if (args.length === 0 || Number.isNaN(args[0])) {
     message.reply('Please provide an index to remove.');
@@ -194,10 +183,11 @@ exports.onRemove = (message, args) => {
 exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
   if (TA_CHANNEL !== message.channel.id) return;
-  if (tas[message.author.id].online_status === 0) {
+  if (!isOnline(message.author)) {
     message.reply("You are offline. Can't ready up.");
     return;
   }
+
   if (queue.length === 0) {
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
@@ -222,30 +212,27 @@ exports.onOof = (message) => {
   message.reply(`There has been ${x} 'persistent' questions to date.`);
 };
 
-// Sets TA to online
-exports.onOnline = (message, client) => {
+exports.onOnline = (message, args, client) => {
   if (TA_CHANNEL === message.channel.id) {
-    if (tas[message.author.id].online_status === 1) {
+    if (isOnline(message.author)) {
       message.reply('You are already online.');
       return;
     }
 
-    tas[message.author.id].online_status = 1;
-    taOn += 1;
+    onlineTas[message.author.id] = {}; // Marks the author as 'online'
     client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
   }
 };
-// Sets TA to Offline
-exports.onOffline = (message, client) => {
+
+exports.onOffline = (message, args, client) => {
   if (TA_CHANNEL === message.channel.id) {
-    if (tas[message.author.id].online_status === 0) {
+    if (!isOnline(message.author)) {
       message.reply('You are already offline.');
       return;
     }
 
-    tas[message.author.id].online_status = 0;
-    taOn -= 1;
+    delete onlineTas[message.author.id];
     client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
     message.reply('You are now offline. ');
   }
