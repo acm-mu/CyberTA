@@ -2,7 +2,7 @@ const ACK = "👍"
 const NAK = "🛑"
 
 const moment = require('moment')
-var TAon = 0;
+var TAon = 0
 
 var queue = []
 var dequeued = []
@@ -40,27 +40,27 @@ function ready(message, index) {
      * This will be a permenant skip, and will not add it to the dequeue cache.
      */
 
-     if (index >= queue.length) return
+    if (index >= queue.length) return
 
     var msg = queue[index].message
     msg.reply(`${tas[message.author.id].name} is ready for you. Move to TA office.`)
     msg.delete()
     
     //Tells you time spent and people on queue.
-    if ( tas[message.author.id].last_helped_time != 0) {
+    if (tas[message.author.id].last_helped_time != 0) {
         startTime = tas[message.author.id].last_helped_time
-        endTime = new Date();
-        var timeDiff = endTime - startTime; //in ms
-        timeDiff /= 1000;
-        var timespent = Math.round(timeDiff) / 60;
-        message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.");
+        endTime = new Date()
+        var timeDiff = endTime - startTime //in ms
+        timeDiff /= 1000
+        var timespent = Math.round(timeDiff) / 60
+        message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.")
     } else {
-        message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.");
+        message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.")
     }
     
     dequeued.push(queue[index])
     queue.splice(index, 1)
-    tas[message.author.id].last_helped_time = new Date();
+    tas[message.author.id].last_helped_time = new Date()
     
     message.react(ACK)
 }
@@ -83,9 +83,13 @@ function contains(member) {
  */
 
 exports.onNext = (message, args) => {
-    if (TAon != 0) {
     if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
     
+    if (TAon == 0) {
+        message.reply("Sorry there are no TA's on.")
+        return
+    }
+
     if (contains(message.author)) {
         message.react(NAK)
         message.reply("You are already on the queue.")
@@ -110,8 +114,6 @@ exports.onNext = (message, args) => {
             msg.delete({ timeout: 10 * 1000 }) 
         })
     }
-    else
-        message.reply("Sorry there are no TA's on.")
 }
 
 /**
@@ -158,7 +160,7 @@ exports.onQueue = (message, args) => {
 exports.onLeave = (message, args) => {
     if (OFFICE_HOURS == message.channel.id) {
         if (!contains(message.author)) {
-            message.react(NAK);
+            message.react(NAK)
             message.delete({ timeout: 10 * 1000 })
             return
         }
@@ -220,13 +222,13 @@ exports.onOnline = (message, args, client) => {
     if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 1) {
             message.reply("You are already online.")
+            return
         }
-        else {
-          tas[message.author.id].online_status = 1
-          TAon++;
-          client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
-          message.reply("You are now online.")
-        }    
+        
+        tas[message.author.id].online_status = 1
+        TAon++
+        client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
+        message.reply("You are now online.")
     }   
 }
 //Sets TA to Offline
@@ -234,13 +236,13 @@ exports.onOffline = (message, args, client) => {
    if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 0) {
             message.reply("You are already offline.")
+            return
         }
-        else {
-          tas[message.author.id].online_status = 0
-          TAon--;
-          client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
-          message.reply("You are now offline. ")
-        } 
+        
+        tas[message.author.id].online_status = 0
+        TAon--
+        client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
+        message.reply("You are now offline. ")
     }
 }
 
