@@ -9,13 +9,13 @@ Fixes # (issue number)
 <!-- Please delete options that are not relevant. -->
 
 - [ ] 🐞 Bug fix
-<!--  - Non-breaking change which fixes an issue -->
+<!-- Non-breaking change which fixes an issue -->
 
 - [ ] 💡 New feature
-<!--   - Non-breaking change which adds functionality -->
+<!-- Non-breaking change which adds functionality -->
 
 - [ ] ⚠️ Breaking change
-<!--
+<!-- 
   - Changes a method signature.
   - Changes the behavior of a method.
   - Changes settings, configuration. -->
@@ -25,7 +25,7 @@ Fixes # (issue number)
 <!-- Unless this is a documentation change, please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration -->
 
 - [ ] Tested individually.
-  - Performed tests individually on a development deployment.
+<!-- Performed tests individually on a development deployment. -->
 
 # Checklist:
 
@@ -34,6 +34,6 @@ Fixes # (issue number)
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no new warnings.
-- [ ] My changes does not break any features.
-  - This not the same as a **Breaking Change**. You have tested that all other features are no effected by this change.
 - [ ] Any dependent changes have been merged and published in downstream modules.
+- [ ] My changes does not break any features.
+<!-- This not the same as a **Breaking Change**. You have tested that all other features are no effected by this change. -->
