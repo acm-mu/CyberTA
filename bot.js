@@ -43,6 +43,12 @@ client.on('message', (message) => {
     case '!oof':
       officehours.onOof(message);
       break;
+    case '!online':
+      officehours.onOnline(message, client);
+      break;
+    case '!offline':
+      officehours.onOffline(message, client);
+      break;
     case '!ready':
     case 'ready':
       officehours.onReady(message, args);
