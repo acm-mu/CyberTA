@@ -92,7 +92,7 @@ function queueContents(client, message) {
         }
 
         message.channel.send("```nimrod\n" + body + "```")
-        return
+        
 }
 
 function remove(client, message) {
