@@ -1,17 +1,15 @@
-const ACK = "👍"
-const NAK = "🛑"
+const ACK = '👍';
+const NAK = '🛑';
 
-const moment = require('moment')
-var x = 0
-var TAon = 0
+const moment = require('moment');
 
-var queue = []
-var dequeued = []
+let x = 0;
+const queue = [];
+const dequeued = [];
 
-const OFFICE_HOURS = process.env.OFFICE_HOURS
-const TA_CHANNEL = process.env.TA_CHANNEL
+const { OFFICE_HOURS, TA_CHANNEL } = process.env;
 
-const onlineTas = { }
+const onlineTas = { };
 
 function getNickname(message) {
   return message.guild.member(message.author).nickname;
@@ -21,239 +19,237 @@ function isOnline(member) {
   return member.id in onlineTas;
 }
 
-function ready(message, index) {
-
-    /**
+function ready(message, readyIndex) {
+  /**
      * If the next person in the queue is offline, it should skip over them.
      * This will be a permenant skip, and will not add it to the dequeue cache.
      */
-        if (index >= queue.length) return
+  if (readyIndex >= queue.length) return;
 
-        var msg = queue[index].message
-        const nickname = getNickname(message);
-        msg.reply(`${nickname} is ready for you. Move to TA office.`)
-        msg.delete()
+  const authorId = message.author.id;
+  const msg = queue[readyIndex].message;
+  const nickname = getNickname(message);
+  msg.reply(`${nickname} is ready for you. Move to TA office.`);
+  msg.delete();
 
-        //Tells you time spent and people on queue.
-        if (onlineTas[authorId].last_helped_time !== 0) {
-            const startTime = onlineTas[authorId].last_helped_time;
-            const duration = moment.duration(startTime);
-            message.reply(`You have spent ${duration.minutes()} minutes with that team. ${queue.length - 1} people on the queue.`);
-        } else {
-            message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.")
-        }
+  // Tells you time spent and people on queue.
+  if (onlineTas[authorId].last_helped_time !== 0) {
+    const startTime = onlineTas[authorId].last_helped_time;
+    const duration = moment.duration(startTime);
+    message.reply(`You have spent ${duration.minutes()} minutes with that team. ${queue.length - 1} people on the queue.`);
+  } else {
+    message.reply(`Readying up. There are ${queue.length - 1} people left on the queue.`);
+  }
 
-        dequeued.push(queue[index])
-        queue.splice(index, 1)
-        
-        onlineTas[authorId].last_helped_time = new Date();
+  dequeued.push(queue[readyIndex]);
+  queue.splice(readyIndex, 1);
 
-        message.react(ACK)
+  onlineTas[authorId].last_helped_time = new Date();
+
+  message.react(ACK);
 }
 
 function index(member) {
-    for (var i = 0; i < queue.length; i++)
-        if (queue[i].member.id == member.id)
-            return i
-    return -1
+  for (let i = 0; i < queue.length; i += 1) {
+    if (queue[i].member.id === member.id) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 function contains(member) {
-    return index(member) != -1
+  return index(member) !== -1;
 }
 
 /**
- * Users can add themselves to the queue via the next command. If users are 
+ * Users can add themselves to the queue via the next command. If users are
  * already on the queue, it will let them know and quit. The bot will also
  * let them know on success
  */
 
 exports.onNext = (message, args) => {
-    if (message.channel.id != OFFICE_HOURS) return // Behavior is only in the os-office-hours channel
-    
-    if (Object.keys(onlineTas).length === 0) {
-        message.reply("Sorry there are no TA's on.")
-        return
-    }
+  if (message.channel.id !== OFFICE_HOURS) return;
 
-    if (contains(message.author)) {
-        message.react(NAK)
-        message.reply("You are already on the queue.")
-            .then(msg => {
-                msg.delete({ timeout: 5000 })
-                message.delete({ timeout: 5000 })
-             })
-             return
-    }
+  if (Object.keys(onlineTas).length === 0) {
+    message.reply("Sorry there are no TA's on.");
+    return;
+  }
 
-    queue.push({
-        member: message.author,
-        desc: args.join(" "),
-        message: message,
-        timestamp: new Date()
-    })
+  if (contains(message.author)) {
+    message.react(NAK);
+    message.reply('You are already on the queue.')
+      .then((msg) => {
+        msg.delete({ timeout: 5000 });
+        message.delete({ timeout: 5000 });
+      });
+    return;
+  }
 
-    message.react(ACK)
+  queue.push({
+    member: message.author,
+    desc: args.join(' '),
+    message,
+    timestamp: new Date(),
+  });
 
-    message.reply(`You are now #${queue.length} in the queue.`)
-        .then(msg => {
-            msg.delete({ timeout: 10 * 1000 }) 
-        })
-}
+  message.react(ACK);
+
+  message.reply(`You are now #${queue.length} in the queue.`)
+    .then((msg) => {
+      msg.delete({ timeout: 10 * 1000 });
+    });
+};
 
 /**
  * If a TA accidently readied a student, and needs to put them back on the queue.
  * '!undo' will automatically put the last dequeued member back to the front of the queue.
- * 
+ *
  * If the bot does not remember any recent readied students, it will tell the TA.
- * 
+ *
  * There is currently no Bot process for letting the user know it was an accident
  */
 
-exports.onUndo = (message, args) => {
-    if (TA_CHANNEL == message.channel.id) {
-        if (dequeued.length == 0) {
-            message.react(NAK)
-            message.reply("```nimrod\nThere is currently nothing in the dequeue cache.```")
-            return
-        }
-
-        queue.splice(0, 1, dequeued.pop())
-        message.react(ACK)
-        message.reply("```nimrod\nDone! Don't screw up next time!```")
+exports.onUndo = (message) => {
+  if (TA_CHANNEL === message.channel.id) {
+    if (dequeued.length === 0) {
+      message.react(NAK);
+      message.reply('```nimrod\nThere is currently nothing in the dequeue cache.```');
+      return;
     }
-}
+    queue.splice(0, 1, dequeued.pop());
+    message.react(ACK);
+    message.reply("```nimrod\nDone! Don't screw up next time!```");
+  }
+};
 
-exports.onQueue = (message, args) => {
-    if (TA_CHANNEL == message.channel.id) {
-        if (queue.length == 0) {
-            message.channel.send("```nimrod\nThe queue is currently empty```")
-            return
-        }
-
-        var body = ""
-        for (var i = 0; i < queue.length; i++) {
-            var username = queue[i].member.username
-            var waitTime = moment(queue[i].timestamp).fromNow()
-            var desc = queue[i].desc
-
-            body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
-        }
-
-        message.channel.send("```nimrod\n" + body + "```")
+exports.onQueue = (message) => {
+  if (TA_CHANNEL === message.channel.id) {
+    if (queue.length === 0) {
+      message.channel.send('```nimrod\nThe queue is currently empty```');
+      return;
     }
-}
+    let body = '';
+    for (let i = 0; i < queue.length; i += 1) {
+      const { username } = queue[i].member;
+      const waitTime = moment(queue[i].timestamp).fromNow();
+      const { desc } = queue[i];
+
+      body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`;
+    }
+    message.channel.send(`\`\`\`nimrod\n\${${body}\`\`\``);
+  }
+};
 
 // This potentially could be where the TA-leave functionality goes
-exports.onLeave = (message, args) => {
-    if (OFFICE_HOURS == message.channel.id) {
-        if (!contains(message.author)) {
-            message.react(NAK)
-            message.delete({ timeout: 10 * 1000 })
-            return
-        }
-
-        queue.splice(index(message.author), 1)
-        message.react(ACK)
-        message.delete({ timeout: 10 * 1000 })
+exports.onLeave = (message) => {
+  if (OFFICE_HOURS === message.channel.id) {
+    if (!contains(message.author)) {
+      message.react(NAK);
+      message.delete({ timeout: 10 * 1000 });
+      return;
     }
-}
+
+    queue.splice(index(message.author), 1);
+    message.react(ACK);
+    message.delete({ timeout: 10 * 1000 });
+  }
+};
 
 exports.onRemove = (message, args) => {
-    if (TA_CHANNEL != message.channel.id) return
-    if(!isOnline(message.author)) {
-        message.reply("You are offline. Can't remove.")
-        return
-    }
+  if (TA_CHANNEL !== message.channel.id) return;
+  if (!isOnline(message.author)) {
+    message.reply("You are offline. Can't remove.");
+    return;
+  }
 
-    if (args.length == 0 || isNaN(args[0])) {
-        message.reply("Please provide an index to remove.")
-        message.reply("`!remove <index>`")
-        return
-    }
+  if (args.length === 0 || Number.isNaN(args[0])) {
+    message.reply('Please provide an index to remove.');
+    message.reply('`!remove <index>`');
+    return;
+  }
 
-    var index = parseInt(args[0])
-    if (index >= queue.length) {
-        message.react(NAK)
-        message.reply("Invalid index.")
-        return
-    }
+  const removeIndex = parseInt(args[0], 10);
+  if (removeIndex >= queue.length) {
+    message.react(NAK);
+    message.reply('Invalid index.');
+    return;
+  }
 
-    message.react(ACK)
-    queue.splice(index, 1)
-}
+  message.react(ACK);
+  queue.splice(removeIndex, 1);
+};
 
 exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
-   if (TA_CHANNEL != message.channel.id) return
-    if (!isOnline(message.author)) {
-        message.reply("You are offline. Can't ready up.")
-        return
-    }
+  if (TA_CHANNEL !== message.channel.id) return;
+  if (!isOnline(message.author)) {
+    message.reply("You are offline. Can't ready up.");
+    return;
+  }
 
-    if (queue.length == 0) {
-        message.channel.send("```nimrod\nThe queue is currently empty```")
-        return
-    }
+  if (queue.length === 0) {
+    message.channel.send('```nimrod\nThe queue is currently empty```');
+    return;
+  }
 
-    var index = 0
-    if (args.length > 0 && !isNaN(args[0]))
-        index = parseInt(args[0])
-    
-    if (index >= queue.length) {
-        message.react(NAK)
-        message.reply("Invalid index.")
-        return
-    }
-    
-    ready(message, index)
-}
+  let readyIndex = 0;
+  if (args.length > 0 && !Number.isNaN(args[0])) {
+    readyIndex = parseInt(args[0], 10);
+  }
 
-exports.onOof = (message, args) => {
-     x++
-     message.reply("There has been " + x + " 'persistent' questions to date.")
-}
+  if (readyIndex >= queue.length) {
+    message.react(NAK);
+    message.reply('Invalid index.');
+    return;
+  }
 
-//Sets TA to online
+  ready(message, readyIndex);
+};
+
+exports.onOof = (message) => {
+  x += 1;
+  message.reply(`There has been ${x} 'persistent' questions to date.`);
+};
+
 exports.onOnline = (message, args, client) => {
-    if (TA_CHANNEL == message.channel.id) {
-        if (isOnline(message.author)) {
-            message.reply("You are already online.")
-            return
-        }
-        
-        onlineTas[message.author.id] = {}; // Marks the author as 'online'
-        client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
-        message.reply("You are now online.")
-    }   
-}
-//Sets TA to Offline
-exports.onOffline = (message, args, client) => {
-   if (TA_CHANNEL == message.channel.id) {
-        if (!isOnline(message.author)) {
-            message.reply("You are already offline.")
-            return
-        }
-        
-        delete onlineTas[message.author.id];
-        client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
-        message.reply("You are now offline. ")
+  if (TA_CHANNEL === message.channel.id) {
+    if (isOnline(message.author)) {
+      message.reply('You are already online.');
+      return;
     }
-}
 
-exports.onHelp = (message, args) => {
-    if (TA_CHANNEL == message.channel.id) {
-        message.reply("``` \
-            ping - simple test that responds with \"pong\". \
-            \n!queue - view the queue w/ username, issue description, and how long they've been waiting. \
-            \n!undo - quickly undo the ready command that removed them from the queue. \
-            \n!remove <index> - removes user from queue at certain index. Does not alert the user. \
-            \n!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready. \
-            \n!help - shows these commands.```")
-        return
+    onlineTas[message.author.id] = {}; // Marks the author as 'online'
+    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
+    message.reply('You are now online.');
+  }
+};
+
+exports.onOffline = (message, args, client) => {
+  if (TA_CHANNEL === message.channel.id) {
+    if (!isOnline(message.author)) {
+      message.reply('You are already offline.');
+      return;
     }
-    message.reply("``` \
-        next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue. \
-        \nhelp - provides a list of commands and their functions.```")
-        
-}
+
+    delete onlineTas[message.author.id];
+    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
+    message.reply('You are now offline. ');
+  }
+};
+
+exports.onHelp = (message) => {
+  if (TA_CHANNEL === message.channel.id) {
+    message.reply('```'
+            + 'ping - simple test that responds with "pong".\n'
+            + "!queue - view the queue w/ username, issue description, and how long they've been waiting.\n"
+            + '!undo - quickly undo the ready command that removed them from the queue.\n'
+            + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
+            + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
+            + '!help - shows these commands.```');
+    return;
+  }
+  message.reply('```'
+        + "next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n"
+        + '\nhelp - provides a list of commands and their functions.```');
+};
