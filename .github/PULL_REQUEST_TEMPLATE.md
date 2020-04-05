@@ -34,4 +34,4 @@ Fixes # (issue number)
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] My changes generate no new warnings.
 - [ ] My changes do not break any features.
-<!-- This not the same as a **Breaking Change**. You have tested that all other features are no affected by this change. -->
+<!-- This not the same as a **Breaking Change**. You have tested that all other features are not affected by this change. -->
