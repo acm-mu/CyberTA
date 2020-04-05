@@ -44,10 +44,10 @@ client.on('message', (message) => {
       officehours.onOof(message);
       break;
     case '!online':
-      officehours.onOnline(message, client);
+      officehours.onOnline(message);
       break;
     case '!offline':
-      officehours.onOffline(message, client);
+      officehours.onOffline(message);
       break;
     case '!ready':
     case 'ready':
