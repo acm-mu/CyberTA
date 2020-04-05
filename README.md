@@ -9,6 +9,8 @@ CyberTA was designed in the COVID-19 pandemic to help Operating Systems TA with 
   - ```!undo``` - quickly undo the next call that put the user in queue
   - ```!remove``` - takes a index paramater (i:e remove 2), removes user from queue at certain index, alerts user that TA is ready, deletes user's !next call
   - ```!ready``` - removes user from top of the queue, alerts user that the TA is ready, deletes !next call from top user, tells time spent on previous team (if available)
+  - ```!online``` - enables !next command, sets TA to online
+  - ```!offline``` - disables !next command, sets TA to offline
   - ```!help``` - provides list of commands and their functions
 
 ### Tech
@@ -23,9 +25,7 @@ To be written
 ### TO:DOs
 
  - Persistent Queue
- - Add a student remove
  - Add a TA remove that does not alert students
- - Add a ```online/off TA``` mode 
  - possibly remove discord IDs to config var so that it'll remain private if github repo goes public
 
 License
