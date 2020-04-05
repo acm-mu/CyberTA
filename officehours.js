@@ -2,7 +2,7 @@ const ACK = "👍"
 const NAK = "🛑"
 
 const moment = require('moment')
-var x
+var x = 0
 var TAon = 0
 
 var queue = []
