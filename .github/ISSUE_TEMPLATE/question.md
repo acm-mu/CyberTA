@@ -12,7 +12,9 @@ labels: "type: question or discussion"
 ## Summary
 
 ## Relevant information
+
 <!-- Provide as much useful information as you can -->
 
 ### File in question
+
 <!-- If you have a question about a particular file, please include -->
