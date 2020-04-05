@@ -4,7 +4,7 @@ const NAK = '🛑';
 const moment = require('moment');
 
 let x = 0;
-const queue = [];
+let queue = [];
 const dequeued = [];
 
 const { OFFICE_HOURS, TA_CHANNEL } = process.env;
@@ -60,11 +60,6 @@ function index(member) {
 
 function contains(member) {
   return index(member) !== -1;
-}
-
-function remove(client, message) {
-    var msg = queue[index].message
-    msg.delete()
 }
 
 /**
@@ -259,22 +254,20 @@ exports.onHelp = (message) => {
 };
 
 exports.onClear = (client, message) => {
-    if (TA_CHANNEL != message.channel.id) return
+  if (TA_CHANNEL !== message.channel.id) return;
 
-    if (queue.length == 0) {
-        message.channel.send("```nimrod\nThe queue is currently empty```")
-        return
-    }
+  if (queue.length === 0) {
+    message.channel.send('```nimrod\nThe queue is currently empty```');
+    return;
+  }
 
-    for (var i = queue.length - 1; i >= 0; i--) {
-        var msg = queue[i].message
-        msg.delete()
-    }
+  for (let i = queue.length - 1; i >= 0; i -= 1) {
+    const msg = queue[i].message;
+    msg.delete();
+  }
 
-    queue = []
-    if(queue.length == 0) {
-        message.channel.send("```nimrod\nThe queue is now empty!```")
-
-    }
-    
+  queue = [];
+  if (queue.length === 0) {
+    message.channel.send('```nimrod\nThe queue is now empty!```');
+  }
 };

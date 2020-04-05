@@ -3,15 +3,16 @@
 CyberTA was designed in the COVID-19 pandemic to help Operating Systems TA with their queue based office hours. The inspiration came from other twitch.tv bots that allowed users to be put in a queue for games. It uses Discord.js and Heroku apps to create a 24/7 bot that monitors multiple text-channels. 
 
 # Commands
-  - ```!ping``` - simple test that responds "pong"
-  - ```!next ``` - adds a user to queue and responds with user's position in queue, (optional: ```!next + 'issue description'``` ),
-  - ```!queue``` - view the queue w/ user name, issue description, how long they've been waiting
-  - ```!undo``` - quickly undo the next call that put the user in queue
-  - ```!remove``` - takes a index paramater (i:e remove 2), removes user from queue at certain index, alerts user that TA is ready, deletes user's !next call
-  - ```!ready``` - removes user from top of the queue, alerts user that the TA is ready, deletes !next call from top user, tells time spent on previous team (if available)
-  - ```!online``` - enables !next command, sets TA to online
-  - ```!offline``` - disables !next command, sets TA to offline
-  - ```!help``` - provides list of commands and their functions
+  - `!ping` - simple test that responds "pong"
+  - `!next` - adds a user to queue and responds with user's position in queue, (optional: `!next + 'issue description'` ),
+  - `!queue` - view the queue w/ user name, issue description, how long they've been waiting
+  - `!undo` - quickly undo the next call that put the user in queue
+  - `!remove` - takes a index paramater (i:e remove 2), removes user from queue at certain index, alerts user that TA is ready, deletes user's !next call
+  - `!ready` - removes user from top of the queue, alerts user that the TA is ready, deletes !next call from top user, tells time spent on previous team (if available)
+  - `!online` - enables !next command, sets TA to online
+  - `!offline` - disables !next command, sets TA to offline
+  - `!clear` - clears the queue and deletes all `next` messages that were in the queue
+  - `!help` - provides list of commands and their functions
 
 ### Tech
 CyberTA uses the following tech:
