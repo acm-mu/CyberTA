@@ -223,7 +223,7 @@ exports.onOof = (message) => {
 };
 
 // Sets TA to online
-exports.onOnline = (message, args, client) => {
+exports.onOnline = (message, client) => {
   if (TA_CHANNEL === message.channel.id) {
     if (tas[message.author.id].online_status === 1) {
       message.reply('You are already online.');
@@ -237,7 +237,7 @@ exports.onOnline = (message, args, client) => {
   }
 };
 // Sets TA to Offline
-exports.onOffline = (message, args, client) => {
+exports.onOffline = (message, client) => {
   if (TA_CHANNEL === message.channel.id) {
     if (tas[message.author.id].online_status === 0) {
       message.reply('You are already offline.');
