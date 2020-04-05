@@ -2,8 +2,6 @@ const ACK = "👍"
 const NAK = "🛑"
 
 const moment = require('moment')
-var online = false;
-var offline = true;
 var TAon = 0;
 
 var queue = []
@@ -217,6 +215,7 @@ exports.onOof = (message, args) => {
      message.reply("There has been " + x + " 'persistent' questions to date.")
 }
 
+//Sets TA to online
 exports.onOnline = (message, args, client) => {
     if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 1) {
@@ -227,14 +226,10 @@ exports.onOnline = (message, args, client) => {
           TAon++;
           client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now online. Ready to answer questions!:wave:")
           message.reply("You are now online.")
-        }
-        
-       
-        
-    }
-    
+        }    
+    }   
 }
-
+//Sets TA to Offline
 exports.onOffline = (message, args, client) => {
    if (TA_CHANNEL == message.channel.id) {
         if(tas[message.author.id].online_status == 0) {
@@ -245,13 +240,9 @@ exports.onOffline = (message, args, client) => {
           TAon--;
           client.channels.cache.get(process.env.OFFICE_HOURS).send(message.author.toString() + " is now offline.:x:")
           message.reply("You are now offline. ")
-        }
-        
-       
-        
+        } 
     }
 }
-
 
 exports.onHelp = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
