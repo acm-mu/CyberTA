@@ -220,7 +220,7 @@ exports.onOnline = (message) => {
     }
 
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
-    message.guild.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
   }
 };
@@ -233,7 +233,7 @@ exports.onOffline = (message) => {
     }
 
     delete onlineTas[message.author.id];
-    message.guild.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline.:x:`);
     message.reply('You are now offline. ');
   }
 };
