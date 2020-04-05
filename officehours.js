@@ -4,7 +4,7 @@ const NAK = '🛑';
 const moment = require('moment');
 
 let x = 0;
-const queue = [];
+let queue = [];
 const dequeued = [];
 
 const { OFFICE_HOURS, TA_CHANNEL } = process.env;
@@ -231,7 +231,6 @@ exports.onOffline = (message) => {
       message.reply('You are already offline.');
       return;
     }
-
     delete onlineTas[message.author.id];
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline.:x:`);
     message.reply('You are now offline. ');
@@ -246,10 +245,32 @@ exports.onHelp = (message) => {
             + '!undo - quickly undo the ready command that removed them from the queue.\n'
             + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
             + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
+            + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
             + '!help - shows these commands.```');
+  } else {
+    message.reply('```'
+            + "next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n"
+            + '\nhelp - provides a list of commands and their functions.```');
+  }
+};
+
+exports.onClear = (message) => {
+  if (TA_CHANNEL !== message.channel.id) return;
+
+  if (queue.length === 0) {
+    message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
   }
-  message.reply('```'
-        + "next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n"
-        + '\nhelp - provides a list of commands and their functions.```');
+
+  /* Goes through entire queue and finds the student's 'next' message and removes it */
+  for (let i = queue.length - 1; i >= 0; i -= 1) {
+    const msg = queue[i].message;
+    msg.delete();
+  }
+
+  /* Instead of emptying the queue entry by entry, just set the queue equal to the empty set */
+  queue = [];
+  if (queue.length === 0) {
+    message.channel.send('```nimrod\nThe queue is now empty!```');
+  }
 };
