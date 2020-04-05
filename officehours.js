@@ -40,30 +40,29 @@ function ready(message, index) {
      * If the next person in the queue is offline, it should skip over them.
      * This will be a permenant skip, and will not add it to the dequeue cache.
      */
+        if (index >= queue.length) return
 
-    if (index >= queue.length) return
+        var msg = queue[index].message
+        msg.reply(`${tas[message.author.id].name} is ready for you. Move to TA office.`)
+        msg.delete()
 
-    var msg = queue[index].message
-    msg.reply(`${tas[message.author.id].name} is ready for you. Move to TA office.`)
-    msg.delete()
-    
-    //Tells you time spent and people on queue.
-    if (tas[message.author.id].last_helped_time != 0) {
-        startTime = tas[message.author.id].last_helped_time
-        endTime = new Date()
-        var timeDiff = endTime - startTime //in ms
-        timeDiff /= 1000
-        var timespent = Math.round(timeDiff) / 60
-        message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.")
-    } else {
-        message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.")
-    }
-    
-    dequeued.push(queue[index])
-    queue.splice(index, 1)
-    tas[message.author.id].last_helped_time = new Date()
-    
-    message.react(ACK)
+        //Tells you time spent and people on queue.
+        if (tas[message.author.id].last_helped_time != 0) {
+            startTime = tas[message.author.id].last_helped_time
+            endTime = new Date()
+            var timeDiff = endTime - startTime //in ms
+            timeDiff /= 1000
+            var timespent = Math.round(timeDiff) / 60
+            message.reply("You have spent " + timespent +  " minutes with that team. " + (queue.length - 1) +" people on the queue.")
+        } else {
+            message.reply("Readying up. There are " + (queue.length - 1) +" people left on the queue.")
+        }
+
+        dequeued.push(queue[index])
+        queue.splice(index, 1)
+        tas[message.author.id].last_helped_time = new Date()
+
+        message.react(ACK)
 }
 
 function index(member) {
@@ -132,6 +131,7 @@ exports.onUndo = (message, args) => {
             message.reply("```nimrod\nThere is currently nothing in the dequeue cache.```")
             return
         }
+
         queue.splice(0, 1, dequeued.pop())
         message.react(ACK)
         message.reply("```nimrod\nDone! Don't screw up next time!```")
@@ -144,6 +144,7 @@ exports.onQueue = (message, args) => {
             message.channel.send("```nimrod\nThe queue is currently empty```")
             return
         }
+
         var body = ""
         for (var i = 0; i < queue.length; i++) {
             var username = queue[i].member.username
@@ -152,6 +153,7 @@ exports.onQueue = (message, args) => {
 
             body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
         }
+
         message.channel.send("```nimrod\n" + body + "```")
     }
 }
@@ -173,7 +175,11 @@ exports.onLeave = (message, args) => {
 
 exports.onRemove = (message, args) => {
     if (TA_CHANNEL != message.channel.id) return
-    
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
+        return
+    }
+
     if (args.length == 0 || isNaN(args[0])) {
         message.reply("Please provide an index to remove.")
         message.reply("`!remove <index>`")
@@ -192,7 +198,12 @@ exports.onRemove = (message, args) => {
 }
 
 exports.onReady = (message, args) => {
-    if (TA_CHANNEL != message.channel.id) return
+  // If you are not online, you can't ready up.
+   if (TA_CHANNEL != message.channel.id) return
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
+        return
+    }
 
     if (queue.length == 0) {
         message.channel.send("```nimrod\nThe queue is currently empty```")
@@ -208,7 +219,7 @@ exports.onReady = (message, args) => {
         message.reply("Invalid index.")
         return
     }
-
+    
     ready(message, index)
 }
 
