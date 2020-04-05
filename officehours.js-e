@@ -129,15 +129,15 @@ exports.onQueue = (message) => {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
     }
-    let body = '';
+    const body = [];
     for (let i = 0; i < queue.length; i += 1) {
       const { username } = queue[i].member;
       const waitTime = moment(queue[i].timestamp).fromNow();
       const { desc } = queue[i];
 
-      body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`;
+      body.push(`${i}) ${username} "${desc}"\t\t [${waitTime}]`);
     }
-    message.channel.send(`\`\`\`nimrod\n\${${body}\`\`\``);
+    message.channel.send(`\`\`\`nimrod\n${body.join('\n')}\`\`\``);
   }
 };
 
@@ -212,7 +212,7 @@ exports.onOof = (message) => {
   message.reply(`There has been ${x} 'persistent' questions to date.`);
 };
 
-exports.onOnline = (message, client) => {
+exports.onOnline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (isOnline(message.author)) {
       message.reply('You are already online.');
@@ -220,19 +220,19 @@ exports.onOnline = (message, client) => {
     }
 
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
-    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions! :wave:`);
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
   }
 };
 
-exports.onOffline = (message, client) => {
+exports.onOffline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (!isOnline(message.author)) {
       message.reply('You are already offline.');
       return;
     }
     delete onlineTas[message.author.id];
-    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline. :x:`);
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline.:x:`);
     message.reply('You are now offline. ');
   }
 };
@@ -240,13 +240,13 @@ exports.onOffline = (message, client) => {
 exports.onHelp = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     message.reply('```'
-            + 'ping - simple test that responds with "pong".\n'
-            + "!queue - view the queue w/ username, issue description, and how long they've been waiting.\n"
-            + '!undo - quickly undo the ready command that removed them from the queue.\n'
-            + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
-            + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
-            + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
-            + '!help - shows these commands.```');
+        + 'ping - simple test that responds with "pong".\n'
+        + "!queue - view the queue w/ username, issue description, and how long they've been waiting.\n"
+        + '!undo - quickly undo the ready command that removed them from the queue.\n'
+        + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
+        + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
+        + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
+        + '!help - shows these commands.```');
     return;
   }
   message.reply('```'
