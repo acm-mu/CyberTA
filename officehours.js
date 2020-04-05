@@ -245,6 +245,7 @@ exports.onHelp = (message) => {
             + '!undo - quickly undo the ready command that removed them from the queue.\n'
             + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
             + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
+            + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
             + '!help - shows these commands.```');
     return;
   }
