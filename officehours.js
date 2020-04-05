@@ -164,8 +164,24 @@ exports.onUndo = (message, args) => {
 
 exports.onQueue = (message, args) => {
     if (TA_CHANNEL == message.channel.id) {
-        queueContents(client, message)
+        //queueContents(client, message)
+        if (queue.length == 0) {
+            message.channel.send("```nimrod\nThe queue is currently empty```")
+            return
+        }
+
+        var body = ""
+        for (var i = 0; i < queue.length; i++) {
+            var username = queue[i].member.username
+            var waitTime = moment(queue[i].timestamp).fromNow()
+            var desc = queue[i].desc
+
+            body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
+        }
+
+        message.channel.send("```nimrod\n" + body + "```")
     }
+
 }
 
 // This potentially could be where the TA-leave functionality goes
