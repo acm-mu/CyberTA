@@ -4,6 +4,7 @@ const NAK = '🛑';
 const moment = require('moment');
 
 let x = 0;
+let taOn = 0;
 const queue = [];
 const dequeued = [];
 
@@ -84,6 +85,11 @@ function contains(member) {
 
 exports.onNext = (message, args) => {
   if (message.channel.id !== OFFICE_HOURS) return;
+
+  if (taOn === 0) {
+    message.reply("Sorry there are no TA's on.");
+    return;
+  }
 
   if (contains(message.author)) {
     message.react(NAK);
@@ -225,7 +231,7 @@ exports.onOnline = (message, args, client) => {
     }
 
     tas[message.author.id].online_status = 1;
-    TAon += 1;
+    taOn += 1;
     client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
   }
@@ -239,7 +245,7 @@ exports.onOffline = (message, args, client) => {
     }
 
     tas[message.author.id].online_status = 0;
-    TAon -= 1;
+    taOn -= 1;
     client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
     message.reply('You are now offline. ');
   }
