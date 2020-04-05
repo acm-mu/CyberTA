@@ -70,6 +70,7 @@ function ready(message, index) {
         tas[message.author.id].last_helped_time = new Date()
 
         message.react(ACK)
+    }
 }
 
 function index(member) {
