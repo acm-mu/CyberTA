@@ -212,7 +212,7 @@ exports.onOof = (message) => {
   message.reply(`There has been ${x} 'persistent' questions to date.`);
 };
 
-exports.onOnline = (message, args, client) => {
+exports.onOnline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (isOnline(message.author)) {
       message.reply('You are already online.');
@@ -220,12 +220,12 @@ exports.onOnline = (message, args, client) => {
     }
 
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
-    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
+    message.guild.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
   }
 };
 
-exports.onOffline = (message, args, client) => {
+exports.onOffline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (!isOnline(message.author)) {
       message.reply('You are already offline.');
@@ -233,7 +233,7 @@ exports.onOffline = (message, args, client) => {
     }
 
     delete onlineTas[message.author.id];
-    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
+    message.guild.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
     message.reply('You are now offline. ');
   }
 };
