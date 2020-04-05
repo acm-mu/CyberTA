@@ -76,25 +76,6 @@ function contains(member) {
     return index(member) != -1
 }
 
-function queueContents(client, message) {
-    if (queue.length == 0) {
-            message.channel.send("```nimrod\nThe queue is currently empty```")
-            return
-        }
-
-        var body = ""
-        for (var i = 0; i < queue.length; i++) {
-            var username = queue[i].member.username
-            var waitTime = moment(queue[i].timestamp).fromNow()
-            var desc = queue[i].desc
-
-            body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
-        }
-
-        message.channel.send("```nimrod\n" + body + "```")
-        
-}
-
 function remove(client, message) {
     var msg = queue[index].message
     msg.delete()
@@ -314,6 +295,9 @@ exports.onClear = (client, message) => {
     }
 
     queue = []
-    message.channel.send("```nimrod\nThe queue is now empty!```")
-    //queueContents(client, message)
+    if(queue.length == 0) {
+        message.channel.send("```nimrod\nThe queue is now empty!```")
+
+    }
+    
 }
