@@ -291,8 +291,7 @@ exports.onHelp = (message, args) => {
             \n!undo - quickly undo the ready command that removed them from the queue. \
             \n!remove <index> - removes user from queue at certain index. Does not alert the user. \
             \n!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready. \
-            \n!help - shows these commands. \
-            \n!clear - clears the queue.```")
+            \n!help - shows these commands.```")
         return
     }
     message.reply("``` \
@@ -305,16 +304,16 @@ exports.onClear = (client, message) => {
     if (TA_CHANNEL != message.channel.id) return
 
     if (queue.length == 0) {
-        message.reply("The queue is already empty!")
+        message.channel.send("```nimrod\nThe queue is currently empty```")
         return
     }
 
-    // for (var i = queue.length - 1; i >= 0; i--) {
-    //     var msg = queue[index].message
-    //     msg.delete()
-    // }
+    for (var i = queue.length - 1; i >= 0; i--) {
+        var msg = queue[i].message
+        msg.delete()
+    }
 
     queue = []
-    message.reply("The queue is now empty")
+    message.channel.send("```nimrod\nThe queue is now empty!```")
     //queueContents(client, message)
 }
