@@ -39,14 +39,7 @@ function ready(message, index) {
     /**
      * If the next person in the queue is offline, it should skip over them.
      * This will be a permenant skip, and will not add it to the dequeue cache.
-     * If you are not online, you can't ready up.
      */
-     if(tas[message.author.id].online_status == 0) {
-            message.reply("You are offline. Can't ready up.")
-            return
-        }
-    else {
-
         if (index >= queue.length) return
 
         var msg = queue[index].message
@@ -70,7 +63,6 @@ function ready(message, index) {
         tas[message.author.id].last_helped_time = new Date()
 
         message.react(ACK)
-    }
 }
 
 function index(member) {
@@ -199,24 +191,30 @@ exports.onRemove = (message, args) => {
 }
 
 exports.onReady = (message, args) => {
-    if (TA_CHANNEL != message.channel.id) return
+  // If you are not online, you can't ready up.
+   if (TA_CHANNEL != message.channel.id) return
+   if(tas[message.author.id].online_status == 0) {
+            message.reply("You are offline. Can't ready up.")
+            return
+   }
+    else {
+        if (queue.length == 0) {
+            message.channel.send("```nimrod\nThe queue is currently empty```")
+            return
+        }
 
-    if (queue.length == 0) {
-        message.channel.send("```nimrod\nThe queue is currently empty```")
-        return
+        var index = 0
+        if (args.length > 0 && !isNaN(args[0]))
+            index = parseInt(args[0])
+
+        if (index >= queue.length) {
+            message.react(NAK)
+            message.reply("Invalid index.")
+            return
+        }
+
+        ready(message, index)
     }
-
-    var index = 0
-    if (args.length > 0 && !isNaN(args[0]))
-        index = parseInt(args[0])
-    
-    if (index >= queue.length) {
-        message.react(NAK)
-        message.reply("Invalid index.")
-        return
-    }
-
-    ready(message, index)
 }
 
 exports.onOof = (message, args) => {
