@@ -212,7 +212,7 @@ exports.onOof = (message) => {
   message.reply(`There has been ${x} 'persistent' questions to date.`);
 };
 
-exports.onOnline = (message, args, client) => {
+exports.onOnline = (message, client) => {
   if (TA_CHANNEL === message.channel.id) {
     if (isOnline(message.author)) {
       message.reply('You are already online.');
@@ -225,7 +225,7 @@ exports.onOnline = (message, args, client) => {
   }
 };
 
-exports.onOffline = (message, args, client) => {
+exports.onOffline = (message, client) => {
   if (TA_CHANNEL === message.channel.id) {
     if (!isOnline(message.author)) {
       message.reply('You are already offline.');
