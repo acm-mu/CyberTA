@@ -275,7 +275,8 @@ exports.onHelp = (message, args) => {
             \n!undo - quickly undo the ready command that removed them from the queue. \
             \n!remove <index> - removes user from queue at certain index. Does not alert the user. \
             \n!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready. \
-            \n!help - shows these commands.```")
+            \n!help - shows these commands. \
+            \n!clear - clears the queue.```")
         return
     }
     message.reply("``` \
