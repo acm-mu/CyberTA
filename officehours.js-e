@@ -36,9 +36,9 @@ function ready(message, readyIndex) {
   if (onlineTas[authorId].last_helped_time !== 0) {
     const startTime = onlineTas[authorId].last_helped_time;
     const duration = moment.duration(startTime);
-    message.reply(`You have spent ${duration.minutes()} minutes with that team. ${queue.length - 1} people on the queue.`);
+    message.reply(`You have spent ${duration.minutes()} minutes with that team. ${queue.length - 1} people in the queue.`);
   } else {
-    message.reply(`Readying up. There are ${queue.length - 1} people left on the queue.`);
+    message.reply(`Readying up. There are ${queue.length - 1} people left in the queue.`);
   }
 
   dequeued.push(queue[readyIndex]);
@@ -64,7 +64,7 @@ function contains(member) {
 
 /**
  * Users can add themselves to the queue via the next command. If users are
- * already on the queue, it will let them know and quit. The bot will also
+ * already in the queue, it will let them know and quit. The bot will also
  * let them know on success
  */
 
@@ -78,7 +78,7 @@ exports.onNext = (message, args) => {
 
   if (contains(message.author)) {
     message.react(NAK);
-    message.reply('You are already on the queue.')
+    message.reply('You are already in the queue.')
       .then((msg) => {
         msg.delete({ timeout: 5000 });
         message.delete({ timeout: 5000 });
@@ -102,7 +102,7 @@ exports.onNext = (message, args) => {
 };
 
 /**
- * If a TA accidently readied a student, and needs to put them back on the queue.
+ * If a TA accidently readied a student, and needs to put them back in the queue.
  * '!undo' will automatically put the last dequeued member back to the front of the queue.
  *
  * If the bot does not remember any recent readied students, it will tell the TA.
