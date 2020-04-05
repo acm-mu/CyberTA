@@ -309,11 +309,12 @@ exports.onClear = (client, message) => {
         return
     }
 
-    for (var i = queue.length - 1; i >= 0; i--) {
-        var msg = queue[index].message
-        msg.delete()
-    }
+    // for (var i = queue.length - 1; i >= 0; i--) {
+    //     var msg = queue[index].message
+    //     msg.delete()
+    // }
 
     queue = []
-    queueContents(client, message)
+    message.reply("The queue is now empty")
+    //queueContents(client, message)
 }
