@@ -19,6 +19,9 @@ Fixes # (issue number)
   - Changes a method signature.
   - Changes the behavior of a method.
   - Changes settings, configuration. -->
+
+- [ ] 📚 Documentation Change
+<!-- Changes to documentation only -->
   
 # How Has This Been Tested?
 
@@ -33,5 +36,5 @@ Fixes # (issue number)
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] My changes generate no new warnings.
-- [ ] My changes does not break any features.
-<!-- This not the same as a **Breaking Change**. You have tested that all other features are no effected by this change. -->
+- [ ] My changes do not break any features.
+<!-- This not the same as a **Breaking Change**. You have tested that all other features are not affected by this change. -->
