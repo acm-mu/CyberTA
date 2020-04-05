@@ -135,7 +135,7 @@ exports.onQueue = (message) => {
       const waitTime = moment(queue[i].timestamp).fromNow();
       const { desc } = queue[i];
 
-      body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`;
+      body += ` ${i}) ${username} "${desc}"\t\t [${waitTime}]\n`;
     }
     message.channel.send(`\`\`\`nimrod\n\${${body}\`\`\``);
   }
