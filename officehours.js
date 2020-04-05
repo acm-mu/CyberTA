@@ -254,6 +254,7 @@ exports.onHelp = (message) => {
 };
 
 exports.onClear = (client, message) => {
+  let msg = '';
   if (TA_CHANNEL !== message.channel.id) return;
 
   if (queue.length === 0) {
@@ -262,7 +263,7 @@ exports.onClear = (client, message) => {
   }
 
   for (let i = queue.length - 1; i >= 0; i -= 1) {
-    const msg = queue[i].message;
+    msg = queue[i].message;
     msg.delete();
   }
 
