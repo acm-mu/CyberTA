@@ -29,26 +29,26 @@ client.on('message', (message) => {
       officehours.onNext(message, args);
       break;
     case '!leave':
-      officehours.onLeave(message, args);
+      officehours.onLeave(message);
       break;
     case '!queue':
-      officehours.onQueue(message, args);
+      officehours.onQueue(message);
       break;
     case '!undo':
-      officehours.onUndo(message, args);
+      officehours.onUndo(message);
       break;
     case '!remove':
       officehours.onRemove(message, args);
       break;
     case '!oof':
-      officehours.onOof(message, args);
+      officehours.onOof(message);
       break;
     case '!ready':
     case 'ready':
       officehours.onReady(message, args);
       break;
     case '!help':
-      officehours.onHelp(message, args);
+      officehours.onHelp(message);
       break;
     default:
       break;
