@@ -9,15 +9,17 @@ Fixes # (issue number)
 <!-- Please delete options that are not relevant. -->
 
 - [ ] 🐞 Bug fix
-  - Non-breaking change which fixes an issue 
+<!--  - Non-breaking change which fixes an issue -->
+
 - [ ] 💡 New feature
-  - Non-breaking change which adds functionality
+<!--   - Non-breaking change which adds functionality -->
+
 - [ ] ⚠️ Breaking change
+<!--
   - Changes a method signature.
   - Changes the behavior of a method.
-  - Changes settings, configuration.
-- [ ] 📝 This change requires a documentation update
-
+  - Changes settings, configuration. -->
+  
 # How Has This Been Tested?
 
 <!-- Unless this is a documentation change, please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration -->
