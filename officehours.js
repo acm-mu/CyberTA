@@ -2,6 +2,7 @@ const ACK = "👍"
 const NAK = "🛑"
 
 const moment = require('moment')
+var x
 var TAon = 0
 
 var queue = []
@@ -98,22 +99,21 @@ exports.onNext = (message, args) => {
                 message.delete({ timeout: 5000 })
              })
              return
-         }
+    }
 
-        queue.push({
-            member: message.author,
-            desc: args.join(" "),
-            message: message,
-            timestamp: new Date()
-        })
+    queue.push({
+        member: message.author,
+        desc: args.join(" "),
+        message: message,
+        timestamp: new Date()
+    })
 
-        message.react(ACK)
+    message.react(ACK)
 
-        message.reply(`You are now #${queue.length} in the queue.`)
-            .then(msg => {
+    message.reply(`You are now #${queue.length} in the queue.`)
+        .then(msg => {
             msg.delete({ timeout: 10 * 1000 }) 
         })
-    }
 }
 
 /**
