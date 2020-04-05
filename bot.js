@@ -7,7 +7,6 @@ client.on('ready', () => {
 })
 
 client.on('message', message => {
-
     // Only listen in bot's channels
     if (process.env.TA_CHANNEL != message.channel.id 
         && process.env.OFFICE_HOURS != message.channel.id) 
@@ -41,12 +40,6 @@ client.on('message', message => {
         case "!oof":
             officehours.onOof(message, args)
             break 
-        case "!online":
-            officehours.onOnline(message, args, client)
-            break 
-        case "!offline":
-            officehours.onOffline(message, args, client)
-            break     
         case "!ready":
         case "ready":
             officehours.onReady(message, args)
