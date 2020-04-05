@@ -292,7 +292,11 @@ exports.onClear = (client, message) => {
         return
     }
 
-    queue.forEach(remove)
+    for (var i = queue.length - 1; i >= 0; i--) {
+        var msg = queue[index].message
+        msg.delete()
+    }
+
     queue = []
-    queueContents(client, client)
+    queueContents(client, message)
 }
