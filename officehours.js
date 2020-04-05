@@ -253,8 +253,8 @@ exports.onHelp = (message) => {
         + '\nhelp - provides a list of commands and their functions.```');
 };
 
-exports.onClear = (client, message) => {
-  let msg = '';
+exports.onClear = (message) => {
+  // let msg = '';
   if (TA_CHANNEL !== message.channel.id) return;
 
   if (queue.length === 0) {
@@ -263,7 +263,7 @@ exports.onClear = (client, message) => {
   }
 
   for (let i = queue.length - 1; i >= 0; i -= 1) {
-    msg = queue[i].message;
+    const msg = queue[i].message;
     msg.delete();
   }
 

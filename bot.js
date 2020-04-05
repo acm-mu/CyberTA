@@ -32,7 +32,7 @@ client.on('message', (message) => {
       officehours.onLeave(message);
       break;
     case '!clear':
-      officehours.onClear(message, args);
+      officehours.onClear(message);
       break;
     case '!queue':
       officehours.onQueue(message);
