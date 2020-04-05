@@ -19,6 +19,9 @@ Fixes # (issue number)
   - Changes a method signature.
   - Changes the behavior of a method.
   - Changes settings, configuration. -->
+
+- [ ] 📚 Documentation Change
+<!-- Changes to documentation only -->
   
 # How Has This Been Tested?
 
