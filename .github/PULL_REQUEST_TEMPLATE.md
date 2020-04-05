@@ -1,12 +1,10 @@
 # Description
-
-Please include a summary of the change and which issue is fixed or feature request is implemented. Please also include relevant motivation and context. List any dependencies that are required for this change.
+<!-- Please include a summary of the change and which issue is fixed or feature request is implemented. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
 Fixes # (issue number)
 
 ## Type of change
-
-Please delete options that are not relevant.
+<!-- Please delete options that are not relevant. -->
 
 - [ ] 🐞 Bug fix
   - Non-breaking change which fixes an issue 
@@ -19,8 +17,8 @@ Please delete options that are not relevant.
 - [ ] 📝 This change requires a documentation update
 
 # How Has This Been Tested?
-
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+<!--
+Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration -->
 
 - [ ] Tested individually.
   - Performed tests individually on a development deployment.
