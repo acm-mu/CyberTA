@@ -129,15 +129,15 @@ exports.onQueue = (message) => {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
     }
-    let body = '';
+    const body = [];
     for (let i = 0; i < queue.length; i += 1) {
       const { username } = queue[i].member;
       const waitTime = moment(queue[i].timestamp).fromNow();
       const { desc } = queue[i];
 
-      body += ` ${i}) ${username} "${desc}"\t\t [${waitTime}]\n`;
+      body.push(`${i}) ${username} "${desc}"\t\t [${waitTime}]`);
     }
-    message.channel.send(`\`\`\`nimrod\n\${${body}\`\`\``);
+    message.channel.send(`\`\`\`nimrod\n\${${body.join('\n')}\`\`\``);
   }
 };
 
