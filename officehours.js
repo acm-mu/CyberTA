@@ -172,22 +172,27 @@ exports.onLeave = (message, args) => {
 
 exports.onRemove = (message, args) => {
     if (TA_CHANNEL != message.channel.id) return
-    
-    if (args.length == 0 || isNaN(args[0])) {
-        message.reply("Please provide an index to remove.")
-        message.reply("`!remove <index>`")
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
         return
     }
+    else {
+        if (args.length == 0 || isNaN(args[0])) {
+            message.reply("Please provide an index to remove.")
+            message.reply("`!remove <index>`")
+            return
+        }
 
-    var index = parseInt(args[0])
-    if (index >= queue.length) {
-        message.react(NAK)
-        message.reply("Invalid index.")
-        return
-    }
+        var index = parseInt(args[0])
+        if (index >= queue.length) {
+            message.react(NAK)
+            message.reply("Invalid index.")
+            return
+        }
 
-    message.react(ACK)
-    queue.splice(index, 1)
+        message.react(ACK)
+        queue.splice(index, 1)
+  }
 }
 
 exports.onReady = (message, args) => {
