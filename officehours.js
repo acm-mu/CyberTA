@@ -176,23 +176,19 @@ exports.onRemove = (message, args) => {
         message.reply("You are offline. Can't ready up.")
         return
     }
-    else {
-        if (args.length == 0 || isNaN(args[0])) {
-            message.reply("Please provide an index to remove.")
-            message.reply("`!remove <index>`")
-            return
-        }
-
-        var index = parseInt(args[0])
-        if (index >= queue.length) {
-            message.react(NAK)
-            message.reply("Invalid index.")
-            return
-        }
-
-        message.react(ACK)
-        queue.splice(index, 1)
-  }
+    if (args.length == 0 || isNaN(args[0])) {
+        message.reply("Please provide an index to remove.")
+        message.reply("`!remove <index>`")
+        return
+    }
+    var index = parseInt(args[0])
+    if (index >= queue.length) {
+        message.react(NAK)
+        message.reply("Invalid index.")
+        return
+    }
+    message.react(ACK)
+    queue.splice(index, 1)
 }
 
 exports.onReady = (message, args) => {
@@ -202,24 +198,20 @@ exports.onReady = (message, args) => {
             message.reply("You are offline. Can't ready up.")
             return
    }
-    else {
-        if (queue.length == 0) {
-            message.channel.send("```nimrod\nThe queue is currently empty```")
-            return
-        }
-
-        var index = 0
-        if (args.length > 0 && !isNaN(args[0]))
-            index = parseInt(args[0])
-
-        if (index >= queue.length) {
-            message.react(NAK)
-            message.reply("Invalid index.")
-            return
-        }
-
-        ready(message, index)
+    if (queue.length == 0) {
+        message.channel.send("```nimrod\nThe queue is currently empty```")
+        return
     }
+    var index = 0
+    if (args.length > 0 && !isNaN(args[0]))
+        index = parseInt(args[0])
+    
+    if (index >= queue.length) {
+        message.react(NAK)
+        message.reply("Invalid index.")
+        return
+    }
+    ready(message, index)
 }
 
 exports.onOof = (message, args) => {
