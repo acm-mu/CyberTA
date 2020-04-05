@@ -10,16 +10,21 @@ labels: "type: bug"
 -->
 
 ## Description
+
 <!-- Describe the issue that you're seeing.-->
 
 ### Steps to reproduce
+
 <!-- Clear steps describing how to reproduce the issue. -->
 
 ### Expected result
+
 <!-- What should happen?-->
 
 ### Actual result
+
 <!-- What happened.-->
 
 ### Evidence
+
 <!-- Screenshot or copy of the log showing the bug, if possible.-->
