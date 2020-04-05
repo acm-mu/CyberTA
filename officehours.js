@@ -96,21 +96,21 @@ exports.onNext = (message, args) => {
             .then(msg => {
                 msg.delete({ timeout: 5000 })
                 message.delete({ timeout: 5000 })
-            })
-        return
-    }
+             })
+             return
+         }
 
-    queue.push({
-        member: message.author,
-        desc: args.join(" "),
-        message: message,
-        timestamp: new Date()
-    })
+        queue.push({
+            member: message.author,
+            desc: args.join(" "),
+            message: message,
+            timestamp: new Date()
+        })
 
-    message.react(ACK)
+        message.react(ACK)
 
-    message.reply(`You are now #${queue.length} in the queue.`)
-       .then(msg => {
+        message.reply(`You are now #${queue.length} in the queue.`)
+            .then(msg => {
             msg.delete({ timeout: 10 * 1000 }) 
         })
     }
