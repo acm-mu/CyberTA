@@ -137,7 +137,7 @@ exports.onQueue = (message) => {
 
       body.push(`${i}) ${username} "${desc}"\t\t [${waitTime}]`);
     }
-    message.channel.send(`\`\`\`nimrod\n\${${body.join('\n')}\`\`\``);
+    message.channel.send(`\`\`\`nimrod\n${body.join('\n')}\`\`\``);
   }
 };
 
