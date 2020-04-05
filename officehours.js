@@ -255,7 +255,6 @@ exports.onHelp = (message) => {
 };
 
 exports.onClear = (message) => {
-  // let msg = '';
   if (TA_CHANNEL !== message.channel.id) return;
 
   if (queue.length === 0) {
@@ -263,11 +262,13 @@ exports.onClear = (message) => {
     return;
   }
 
+  /* Goes through entire queue and finds the student's 'next' message and removes it */
   for (let i = queue.length - 1; i >= 0; i -= 1) {
     const msg = queue[i].message;
     msg.delete();
   }
 
+  /* Instead of emptying the queue entry by entry, just set the queue equal to the empty set */
   queue = [];
   if (queue.length === 0) {
     message.channel.send('```nimrod\nThe queue is now empty!```');
