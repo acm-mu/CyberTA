@@ -186,8 +186,12 @@ exports.onRemove = (message, args) => {
 };
 
 exports.onReady = (message, args) => {
+  // If you are not online, you can't ready up.
   if (TA_CHANNEL !== message.channel.id) return;
-
+  if (tas[message.author.id].online_status === 0) {
+    message.reply("You are offline. Can't ready up.");
+    return;
+  }
   if (queue.length === 0) {
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
@@ -212,6 +216,35 @@ exports.onOof = (message) => {
   message.reply(`There has been ${x} 'persistent' questions to date.`);
 };
 
+// Sets TA to online
+exports.onOnline = (message, args, client) => {
+  if (TA_CHANNEL === message.channel.id) {
+    if (tas[message.author.id].online_status === 1) {
+      message.reply('You are already online.');
+      return;
+    }
+
+    tas[message.author.id].online_status = 1;
+    TAon += 1;
+    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now online. Ready to answer questions!:wave:`);
+    message.reply('You are now online.');
+  }
+};
+// Sets TA to Offline
+exports.onOffline = (message, args, client) => {
+  if (TA_CHANNEL === message.channel.id) {
+    if (tas[message.author.id].online_status === 0) {
+      message.reply('You are already offline.');
+      return;
+    }
+
+    tas[message.author.id].online_status = 0;
+    TAon -= 1;
+    client.channels.cache.get(process.env.OFFICE_HOURS).send(`${message.author.toString()} is now offline.:x:`);
+    message.reply('You are now offline. ');
+  }
+};
+
 exports.onHelp = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     message.reply('```'
@@ -225,5 +258,5 @@ exports.onHelp = (message) => {
   }
   message.reply('```'
         + "next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n"
-        + 'help - provides a list of commands and their functions.```');
+        + '\nhelp - provides a list of commands and their functions.```');
 };
