@@ -1,9 +1,11 @@
 # Description
+
 <!-- Please include a summary of the change and which issue is fixed or feature request is implemented. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
 Fixes # (issue number)
 
 ## Type of change
+
 <!-- Please delete options that are not relevant. -->
 
 - [ ] 🐞 Bug fix
@@ -19,6 +21,7 @@ Fixes # (issue number)
   - Changes settings, configuration. -->
   
 # How Has This Been Tested?
+
 <!-- Unless this is a documentation change, please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration -->
 
 - [ ] Tested individually.
