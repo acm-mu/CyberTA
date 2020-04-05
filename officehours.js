@@ -131,6 +131,7 @@ exports.onUndo = (message, args) => {
             message.reply("```nimrod\nThere is currently nothing in the dequeue cache.```")
             return
         }
+
         queue.splice(0, 1, dequeued.pop())
         message.react(ACK)
         message.reply("```nimrod\nDone! Don't screw up next time!```")
@@ -143,6 +144,7 @@ exports.onQueue = (message, args) => {
             message.channel.send("```nimrod\nThe queue is currently empty```")
             return
         }
+
         var body = ""
         for (var i = 0; i < queue.length; i++) {
             var username = queue[i].member.username
@@ -151,6 +153,7 @@ exports.onQueue = (message, args) => {
 
             body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
         }
+
         message.channel.send("```nimrod\n" + body + "```")
     }
 }
@@ -172,7 +175,11 @@ exports.onLeave = (message, args) => {
 
 exports.onRemove = (message, args) => {
     if (TA_CHANNEL != message.channel.id) return
-    
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
+        return
+    }
+
     if (args.length == 0 || isNaN(args[0])) {
         message.reply("Please provide an index to remove.")
         message.reply("`!remove <index>`")
@@ -192,29 +199,27 @@ exports.onRemove = (message, args) => {
 
 exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
-   if (TA_CHANNEL != message.channel.id) return
-   if(tas[message.author.id].online_status == 0) {
-            message.reply("You are offline. Can't ready up.")
-            return
-   }
-    else {
-        if (queue.length == 0) {
-            message.channel.send("```nimrod\nThe queue is currently empty```")
-            return
-        }
+  if (TA_CHANNEL != message.channel.id) return
+    if(tas[message.author.id].online_status == 0) {
+      message.reply("You are offline. Can't ready up.")
+      return
+  }
+  if (queue.length == 0) {
+    message.channel.send("```nimrod\nThe queue is currently empty```")
+    return
+  }
 
-        var index = 0
-        if (args.length > 0 && !isNaN(args[0]))
-            index = parseInt(args[0])
-
-        if (index >= queue.length) {
-            message.react(NAK)
-            message.reply("Invalid index.")
-            return
-        }
-
-        ready(message, index)
+  var index = 0
+  if (args.length > 0 && !isNaN(args[0]))
+    index = parseInt(args[0])
+    
+    if (index >= queue.length) {
+      message.react(NAK)
+      message.reply("Invalid index.")
+      return
     }
+    
+    ready(message, index)
 }
 
 exports.onOof = (message, args) => {
