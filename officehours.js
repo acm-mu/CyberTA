@@ -4,7 +4,10 @@ const NAK = '🛑';
 const WARN = '⚠️';
 
 const moment = require('moment');
-const storage = require('node-persist');
+const localdb = require('node-persist');
+
+// This will be set by the exported startup function.
+let storage;
 
 let x = 0;
 let queue = [];
@@ -19,6 +22,7 @@ async function loadQueue() {
 
   await storage.getItem('saved_queue')
     .then((loadedQueue) => {
+      console.log('loadedQueue:');
       console.log(loadedQueue);
 
       if (loadedQueue !== undefined) {
@@ -32,11 +36,13 @@ async function saveQueue() {
 
   await storage.setItem('saved_queue', queue)
     .then((response) => {
+      console.log('saved queue');
       console.log(response);
       console.info('Saved queue to storage!');
     });
   await storage.setItem('saved_dequeued', dequeued)
     .then((response) => {
+      console.log('saved deuque:');
       console.log(response);
       console.info('Saved deuqued to storage!');
     });
@@ -348,10 +354,11 @@ exports.onClear = (message) => {
 };
 
 exports.startup = async () => {
-  await storage.init({
-    logging: true,
-  }).then((res) => {
-    console.log(res);
-    loadQueue();
-  });
+  storage = localdb.create({ logging: true });
+  await storage.init()
+    .then((res) => {
+      console.log('init res:');
+      console.log(res);
+      loadQueue();
+    });
 };
