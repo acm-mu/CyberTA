@@ -12,7 +12,11 @@ const { OFFICE_HOURS, TA_CHANNEL } = process.env;
 const onlineTas = { };
 
 function getNickname(message) {
-  return message.guild.member(message.author).nickname;
+  const member = message.guild.member(message.author);
+  if (member.nickname !== null) {
+    return member.nickname;
+  }
+  return member.user.username;
 }
 
 function isOnline(member) {
