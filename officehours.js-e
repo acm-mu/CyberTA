@@ -128,7 +128,18 @@ exports.onUndo = (message) => {
 };
 
 exports.onQueue = (message) => {
-  if (TA_CHANNEL === message.channel.id) {
+  if (OFFICE_HOURS === message.chnnael.id) {
+    if (queue.length === 0) {
+      message.channel.send('```nimrod\nThe queue is currently empty```');
+      return;
+    }
+    let body = `\`\`\`nimrod\nThere are currently ${queue.length} people in the queue.`;
+    const position = index(message.author);
+    if (position !== -1) {
+      body += `You are #${position + 1}!`;
+    }
+    message.channel.send(`${body}\`\`\``);
+  } else if (TA_CHANNEL === message.channel.id) {
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
