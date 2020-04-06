@@ -1,5 +1,6 @@
 const ACK = '👍';
 const NAK = '🛑';
+const WARN = '⚠️';
 
 const moment = require('moment');
 
@@ -98,7 +99,6 @@ exports.onNext = (message, args) => {
   });
 
   message.react(ACK);
-
   message.reply(`You are now #${queue.length} in the queue.`)
     .then((msg) => {
       msg.delete({ timeout: 10 * 1000 });
@@ -128,7 +128,22 @@ exports.onUndo = (message) => {
 };
 
 exports.onQueue = (message) => {
-  if (TA_CHANNEL === message.channel.id) {
+  if (OFFICE_HOURS === message.channel.id) {
+    message.reply(ACK);
+
+    if (queue.length === 0) {
+      message.channel.send('```nimrod\nThe queue is currently empty```');
+      return;
+    }
+    let body = `\`\`\`nimrod\nThere are currently ${queue.length} people in the queue.`;
+    const position = index(message.author);
+    if (position !== -1) {
+      body += `You are #${position + 1}!`;
+    }
+    message.channel.send(`${body}\`\`\``);
+  } else if (TA_CHANNEL === message.channel.id) {
+    message.reply(ACK);
+
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
@@ -163,11 +178,13 @@ exports.onLeave = (message) => {
 exports.onRemove = (message, args) => {
   if (TA_CHANNEL !== message.channel.id) return;
   if (!isOnline(message.author)) {
+    message.reply(NAK);
     message.reply("You are offline. Can't remove.");
     return;
   }
 
   if (args.length === 0 || Number.isNaN(args[0])) {
+    message.reply(NAK);
     message.reply('Please provide an index to remove.');
     message.reply('`!remove <index>`');
     return;
@@ -188,11 +205,13 @@ exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
   if (TA_CHANNEL !== message.channel.id) return;
   if (!isOnline(message.author)) {
+    message.reply(NAK);
     message.reply("You are offline. Can't ready up.");
     return;
   }
 
   if (queue.length === 0) {
+    message.reply(ACK);
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
   }
@@ -223,6 +242,8 @@ exports.onOnline = (message) => {
       return;
     }
 
+    message.reply(ACK);
+
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions!:wave:`);
     message.reply('You are now online.');
@@ -232,11 +253,13 @@ exports.onOnline = (message) => {
 exports.onOffline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (!isOnline(message.author)) {
+      message.reply(NAK);
       message.reply('You are already offline.');
       return;
     }
     delete onlineTas[message.author.id];
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline.:x:`);
+    message.reply(ACK);
     message.reply('You are now offline. ');
   }
 };
@@ -262,9 +285,12 @@ exports.onClear = (message) => {
   if (TA_CHANNEL !== message.channel.id) return;
 
   if (queue.length === 0) {
+    message.reply(WARN);
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
   }
+
+  message.reply(ACK);
 
   /* Goes through entire queue and finds the student's 'next' message and removes it */
   for (let i = queue.length - 1; i >= 0; i -= 1) {
