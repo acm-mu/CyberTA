@@ -128,7 +128,7 @@ exports.onUndo = (message) => {
 };
 
 exports.onQueue = (message) => {
-  if (OFFICE_HOURS === message.chnnael.id) {
+  if (OFFICE_HOURS === message.channel.id) {
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
