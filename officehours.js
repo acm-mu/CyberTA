@@ -165,7 +165,7 @@ exports.onUndo = (message) => {
 
 exports.onQueue = (message) => {
   if (OFFICE_HOURS === message.channel.id) {
-    message.reply(ACK);
+    message.react(ACK);
 
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
@@ -178,7 +178,7 @@ exports.onQueue = (message) => {
     }
     message.channel.send(`${body}\`\`\``);
   } else if (TA_CHANNEL === message.channel.id) {
-    message.reply(ACK);
+    message.react(ACK);
 
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
@@ -216,13 +216,13 @@ exports.onLeave = (message) => {
 exports.onRemove = (message, args) => {
   if (TA_CHANNEL !== message.channel.id) return;
   if (!isOnline(message.author)) {
-    message.reply(NAK);
+    message.react(NAK);
     message.reply("You are offline. Can't remove.");
     return;
   }
 
   if (args.length === 0 || Number.isNaN(args[0])) {
-    message.reply(NAK);
+    message.react(NAK);
     message.reply('Please provide an index to remove.');
     message.reply('`!remove <index>`');
     return;
@@ -245,13 +245,13 @@ exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
   if (TA_CHANNEL !== message.channel.id) return;
   if (!isOnline(message.author)) {
-    message.reply(NAK);
+    message.react(NAK);
     message.reply("You are offline. Can't ready up.");
     return;
   }
 
   if (queue.length === 0) {
-    message.reply(ACK);
+    message.react(ACK);
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
   }
@@ -282,7 +282,7 @@ exports.onOnline = (message) => {
       return;
     }
 
-    message.reply(ACK);
+    message.react(ACK);
 
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions!:wave:`);
@@ -293,13 +293,13 @@ exports.onOnline = (message) => {
 exports.onOffline = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (!isOnline(message.author)) {
-      message.reply(NAK);
+      message.react(NAK);
       message.reply('You are already offline.');
       return;
     }
     delete onlineTas[message.author.id];
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline.:x:`);
-    message.reply(ACK);
+    message.react(ACK);
     message.reply('You are now offline. ');
   }
 };
@@ -325,12 +325,12 @@ exports.onClear = (message) => {
   if (TA_CHANNEL !== message.channel.id) return;
 
   if (queue.length === 0) {
-    message.reply(WARN);
+    message.react(WARN);
     message.channel.send('```nimrod\nThe queue is currently empty```');
     return;
   }
 
-  message.reply(ACK);
+  message.react(ACK);
 
   /* Goes through entire queue and finds the student's 'next' message and removes it */
   for (let i = queue.length - 1; i >= 0; i -= 1) {
