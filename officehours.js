@@ -17,18 +17,29 @@ const onlineTas = { };
 async function loadQueue() {
   console.log('Attempting to load saved queue.');
 
-  const loadedQueue = await storage.getItem('saved_queue');
-  console.log(loadedQueue);
-  if (loadedQueue !== null) {
-    console.log('Found a queue to load.');
-  }
+  await storage.getItem('saved_queue')
+    .then((loadedQueue) => {
+      console.log(loadedQueue);
+
+      if (loadedQueue !== undefined) {
+        console.info('Found a queue to load.');
+      }
+    });
 }
 
 async function saveQueue() {
-  console.log('Saving queue');
+  console.debug('Attempting to save \'queue\' and \'deuqued\'');
 
-  await storage.setItem('saved_queue', queue);
-  await storage.setItem('saved_dequeued', dequeued);
+  await storage.setItem('saved_queue', queue)
+    .then((response) => {
+      console.log(response);
+      console.info('Saved queue to storage!');
+    });
+  await storage.setItem('saved_dequeued', dequeued)
+    .then((response) => {
+      console.log(response);
+      console.info('Saved deuqued to storage!');
+    });
 }
 
 function getNickname(message) {
@@ -339,7 +350,8 @@ exports.onClear = (message) => {
 exports.startup = async () => {
   await storage.init({
     logging: true,
+  }).then((res) => {
+    console.log(res);
+    loadQueue();
   });
-
-  loadQueue();
 };
