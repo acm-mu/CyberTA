@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 const ACK = '👍';
 const NAK = '🛑';
 const WARN = '⚠️';
 
 const moment = require('moment');
+const storage = require('node-persist');
 
 let x = 0;
 let queue = [];
@@ -11,6 +13,23 @@ const dequeued = [];
 const { OFFICE_HOURS, TA_CHANNEL } = process.env;
 
 const onlineTas = { };
+
+async function loadQueue() {
+  console.log('Attempting to load saved queue.');
+
+  const loadedQueue = await storage.getItem('saved_queue');
+  console.log(loadedQueue);
+  if (loadedQueue !== null) {
+    console.log('Found a queue to load.');
+  }
+}
+
+async function saveQueue() {
+  console.log('Saving queue');
+
+  await storage.setItem('saved_queue', queue);
+  await storage.setItem('saved_dequeued', dequeued);
+}
 
 function getNickname(message) {
   const member = message.guild.member(message.author);
@@ -52,6 +71,8 @@ function ready(message, readyIndex) {
   onlineTas[authorId].last_helped_time = new Date();
 
   message.react(ACK);
+
+  saveQueue();
 }
 
 function index(member) {
@@ -103,6 +124,8 @@ exports.onNext = (message, args) => {
     .then((msg) => {
       msg.delete({ timeout: 10 * 1000 });
     });
+
+  saveQueue();
 };
 
 /**
@@ -124,6 +147,8 @@ exports.onUndo = (message) => {
     queue.splice(0, 1, dequeued.pop());
     message.react(ACK);
     message.reply("```nimrod\nDone! Don't screw up next time!```");
+
+    saveQueue();
   }
 };
 
@@ -172,6 +197,8 @@ exports.onLeave = (message) => {
     queue.splice(index(message.author), 1);
     message.react(ACK);
     message.delete({ timeout: 10 * 1000 });
+
+    saveQueue();
   }
 };
 
@@ -199,6 +226,8 @@ exports.onRemove = (message, args) => {
 
   message.react(ACK);
   queue.splice(removeIndex, 1);
+
+  saveQueue();
 };
 
 exports.onReady = (message, args) => {
@@ -303,4 +332,14 @@ exports.onClear = (message) => {
   if (queue.length === 0) {
     message.channel.send('```nimrod\nThe queue is now empty!```');
   }
+
+  saveQueue();
+};
+
+exports.startup = async () => {
+  await storage.init({
+    logging: true,
+  });
+
+  loadQueue();
 };
