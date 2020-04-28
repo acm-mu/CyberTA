@@ -6,7 +6,6 @@ const officehours = require('./officehours');
 
 client.on('ready', () => {
   console.log('[CyberBot] CyberBot has finished loading, and is enabled!');
-  officehours.startup();
 });
 
 client.on('message', (message) => {
