@@ -1,6 +1,6 @@
 # CyberTA - Discord Queue Bot
 
-CyberTA was designed in the COVID-19 pandemic to help Operating Systems TA with their queue based office hours. The inspiration came from other twitch.tv bots that allowed users to be put in a queue for games. It uses Discord.js and Heroku apps to create a 24/7 bot that monitors multiple text-channels. 
+CyberTA was designed in the COVID-19 pandemic to help Operating Systems TAs with their queue based office hours. The inspiration came from other twitch.tv bots that allowed users to be put in a queue for games. It uses Discord.js and Heroku apps to create a 24/7 bot that monitors multiple text-channels. 
 
 # Commands
   - `!ping` - simple test that responds "pong"
@@ -14,20 +14,39 @@ CyberTA was designed in the COVID-19 pandemic to help Operating Systems TA with 
   - `!clear` - clears the queue and deletes all `next` messages that were in the queue
   - `!help` - provides list of commands and their functions
 
-### Tech
+### Dependencies
 CyberTA uses the following tech:
 * [Discord] - Based communication software
 * [Discord.js] - chat bot language
 * [Heroku] - used for hosting the bot 
 
-### Installation
+### Deploying CyberTA with Heroku
+These instructions are for installing CyberTA to a Heroku application. You will need a GitHub, Heroku, and discord developer account as well as manage server permissions to a Discord server.
 
-To be written
+1. Fork this repository to your GitHub account, or an account you have access to.
+##### Heroku Instance
+1. Create a new app, call it whatever you'd like (only you will see this).
+2. For deployment method, choose Github, search for your fork and connect.
+3. Once it has connected successfully a new section called "Manual deploy" will appear, deploy master to pull the code from GitHub.
+4. The Heroku instance will now install dependencies, and you will need to configure the app.
+##### Discord Bot
+6. Goto https://discord.com/developers/applications.
+7. Create a new application (again, call it whatever you'd like, this is for you).
+8. Once you have created your app, add a bot and copy the bot token.
+9. If you'd like to change the username field now, this is what will your bot will be called.
+9. Go back to your Heroku app settings, under 'Settings', reveal config vars.
+10. Create a new variable `BOT_TOKEN` and paste your copied token.
+11. On your Discord server right click the channel you wish to designate for the TA's to manage the queue (You may need to hold shift) and click 'Copy ID'.
+12. This ID will be the `TA_CHANNEL` config var on Heroku.
+13. Do the same for the office hours channel creating a `OFFICE_HOURS` config var with the corresponding ID on Heroku.
+14. To add this Bot to your server, go to https://scarsz.me/authorize. You can find your client Id from the Discord application settings, under 'General Information'.
+15. Choose the server you'd like to deploy the bot to, and 'Authorize'. 
+16. Back on Heroku, under the 'Resources' section you should now have two Dynos a web and a node worker. Disable the web and enable the node worker.
+17. This will restart the application and your bot should not be functional.
+
 ### TO:DOs
 
- - Persistent Queue
- - Add a TA remove that does not alert students
- - possibly remove discord IDs to config var so that it'll remain private if github repo goes public
+ - Persistent Queue (Heroku does not support persistent file storage, so this may need a database)
 
 License
 ----
@@ -40,8 +59,3 @@ MIT
    [Discord]: <https://discordapp.com/r>
    [Discord.js]: <https://discord.js.org/#/>
    [Heroku]: <https://www.heroku.com/home>
-
-## Features To Be Implemented
-* **Persistant Queue**
-* Remove someone from the queue without ready-ing them.
-* Next time a TA ready's someone, give a time on how long they spent with the last student
