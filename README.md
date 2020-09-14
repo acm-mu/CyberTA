@@ -42,7 +42,7 @@ These instructions are for installing CyberTA to a Heroku application. You will 
 14. To add this Bot to your server, go to https://scarsz.me/authorize. You can find your client Id from the Discord application settings, under 'General Information'.
 15. Choose the server you'd like to deploy the bot to, and 'Authorize'. 
 16. Back on Heroku, under the 'Resources' section you should now have two Dynos a web and a node worker. Disable the web and enable the node worker.
-17. This will restart the application and your bot should not be functional.
+17. This will restart the application and your bot should now be functional.
 
 ### TO:DOs
 
