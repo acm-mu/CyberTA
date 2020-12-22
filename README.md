@@ -44,9 +44,30 @@ These instructions are for installing CyberTA to a Heroku application. You will 
 16. Back on Heroku, under the 'Resources' section you should now have two Dynos a web and a node worker. Disable the web and enable the node worker.
 17. This will restart the application and your bot should now be functional.
 
-### TO:DOs
+### Running Locally or Deploying to Custom Hosting
+These instructions assume you have your own hosting platform (or your own computer) and node.js installed. You only need a discord developer account, but a GitHub account is recommended to receive future updates.
 
- - Persistent Queue (Heroku does not support persistent file storage, so this may need a database)
+1. Clone / Download this repo to the local directory of your hosting platform (this can be your local machine) of choice.
+2. Inside the repo directory run the command `npm install` to install dependencies.
+3. Create a file named `.env` in this directory following the example below. (This will contain secret application-specific environment variables, do not push upstream!)
+4. Goto https://discord.com/developers/applications.
+5. Create a new application (again, call it whatever you'd like, this is for you).
+6. Once you have created your app, add a bot and copy the bot token.
+7. If you'd like to change the username field now, this is what will your bot will be called.
+8. Paste your bot token into the `<BOT_TOKEN>` placeholder in the example file.
+9. On your Discord server right click the channel you wish to designate for the TA's to manage the queue (You may need to hold shift) and click 'Copy ID'.
+10. This ID will be the `<TA_CHANNEL>` value in the `.env` file example.
+11. Do the same for the office hours channel filling in `<OFFICE_HOURS>` with the corresponding ID.
+12. To add this Bot to your server, go to https://scarsz.me/authorize. You can find your client Id from the Discord application settings, under 'General Information'.
+13. Choose the server you'd like to deploy the bot to, and 'Authorize'.
+14. Back on your hosting platform, run the command `npm start` from the repo directory. 
+
+### Example .env File
+```
+BOT_TOKEN=<BOT_TOKEN>
+TA_CHANNEL=<TA_CHANNEL>
+OFFICE_HOURS=<OFFICE_HOURS>
+```
 
 License
 ----
