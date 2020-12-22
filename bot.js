@@ -1,66 +1,27 @@
 /* eslint-disable no-console */
 const Discord = require('discord.js');
-
-const client = new Discord.Client();
+const dotenv = require('dotenv');
 const officehours = require('./officehours');
 
+if ((!('BOT_TOKEN' in process.env))) {
+  dotenv.config();
+}
+
+const client = new Discord.Client();
+
 client.on('ready', () => {
-  console.log('[CyberBot] CyberBot has finished loading, and is enabled!');
+  console.log('[CyberTA] CyberTA has finished loading, and is enabled!');
 });
 
 client.on('message', (message) => {
-  // Only listen in bot's channels
-  if (process.env.TA_CHANNEL !== message.channel.id
-        && process.env.OFFICE_HOURS !== message.channel.id) {
+  if (![process.env.TA_CHANNEL, process.env.OFFICE_HOURS].includes(message.channel.id)) {
     return;
   }
 
-  const args = message.content.split(' ');
-  const cmd = args[0].toLowerCase();
-  args.splice(0, 1);
+  const [cmd, ...args] = message.content.toLowerCase().split(' ');
 
-  switch (cmd) {
-    case '!ping':
-    case 'ping':
-      message.reply('Pong!');
-      break;
-    case 'next':
-    case '!next':
-      officehours.onNext(message, args);
-      break;
-    case '!leave':
-      officehours.onLeave(message);
-      break;
-    case '!clear':
-      officehours.onClear(message);
-      break;
-    case '!queue':
-      officehours.onQueue(message);
-      break;
-    case '!undo':
-      officehours.onUndo(message);
-      break;
-    case '!remove':
-      officehours.onRemove(message, args);
-      break;
-    case '!oof':
-      officehours.onOof(message);
-      break;
-    case '!online':
-      officehours.onOnline(message);
-      break;
-    case '!offline':
-      officehours.onOffline(message);
-      break;
-    case '!ready':
-    case 'ready':
-      officehours.onReady(message, args);
-      break;
-    case '!help':
-      officehours.onHelp(message);
-      break;
-    default:
-      break;
+  if (cmd in officehours.cmds) {
+    officehours.cmds[cmd].call(this, message, args);
   }
 });
 
