@@ -41,7 +41,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  ping: (message) => {
+  '!ping': (message) => {
     message.react(ACK);
     message.reply('Pong!');
   },
@@ -55,7 +55,7 @@ exports.cmds = {
    * @param {string[]} args - The words following the command that invoked this function
    * from the discord message.
    */
-  next: (message, args) => {
+  '!next': (message, args) => {
     if (message.channel.id !== OFFICE_HOURS) return;
 
     if (Object.keys(onlineTas).length === 0) {
@@ -102,7 +102,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  leave: (message) => {
+  '!leave': (message) => {
     if (OFFICE_HOURS === message.channel.id) {
       if (!contains(message.author)) {
         message.react(NAK);
@@ -125,7 +125,7 @@ exports.cmds = {
    *
    * @param {Object} message - The Discord message object to interact with.
    */
-  clear: (message) => {
+  '!clear': (message) => {
     if (TA_CHANNEL !== message.channel.id) return;
 
     if (queue.length === 0) {
@@ -155,7 +155,7 @@ exports.cmds = {
    *
    * @param {*} message - The Discord message object to interact with.
    */
-  queue: (message) => {
+  '!queue': (message) => {
     if (OFFICE_HOURS === message.channel.id) {
       message.react(ACK);
 
@@ -202,7 +202,7 @@ exports.cmds = {
    *
    * @param {Object} message - The discord messsage object to interact with.
    */
-  undo: (message) => {
+  '!undo': (message) => {
     if (TA_CHANNEL === message.channel.id) {
       if (dequeued.length === 0) {
         message.react(NAK);
@@ -223,7 +223,7 @@ exports.cmds = {
    * @param {string[]} args - The first element in the array should be a number string
    * representing an index in the queue.
    */
-  remove: (message, args) => {
+  '!remove': (message, args) => {
     if (TA_CHANNEL !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
@@ -277,7 +277,7 @@ exports.cmds = {
    * @param {string[]} args - If provided the first element in the array should be a string number
    * representing a index in the queue to ready up.
    */
-  ready: (message, args) => {
+  '!ready': (message, args) => {
     if (TA_CHANNEL !== message.channel.id) return;
     if (!isOnline(message.author)) {
       message.react(NAK);
@@ -344,7 +344,7 @@ exports.cmds = {
    *
    * @param {Object} message - Discord message object to interact with.
    */
-  online: (message) => {
+  '!online': (message) => {
     if (TA_CHANNEL === message.channel.id) {
       if (isOnline(message.author)) {
         message.reply('You are already online.')
@@ -369,7 +369,7 @@ exports.cmds = {
    *
    * @param {*} message - The discord messsage object to interact with.
    */
-  offline: (message) => {
+  '!offline': (message) => {
     if (TA_CHANNEL === message.channel.id) {
       if (!isOnline(message.author)) {
         message.react(NAK);
@@ -392,7 +392,7 @@ exports.cmds = {
    *
    * @param {Obejct} message - The Discord message object to interact with.
    */
-  help: (message) => {
+  '!help': (message) => {
     if (TA_CHANNEL === message.channel.id) {
       message.reply('```'
         + '!ping - simple test that responds with "pong".\n'
