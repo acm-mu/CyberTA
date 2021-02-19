@@ -16,7 +16,6 @@ const queue = [];
 const dequeued = [];
 const onlineTas = {};
 const hiddenTas = {};
-const afkTas = {};
 let offlineCommands = false;
 
 function readyMessageSender(message, list, queueMessage) {
@@ -51,7 +50,6 @@ function index(member) {
 
 const isOnline = (member) => member.id in onlineTas;
 const isHidden = (member) => member.id in hiddenTas;
-const isAFK = (member) => member.id in afkTas;
 const contains = (member) => index(member) !== -1;
 
 exports.cmds = {
@@ -299,7 +297,7 @@ exports.cmds = {
    */
   '!ready': (message, args) => {
     if (TA_CHANNEL !== message.channel.id) return;
-    if (!isOnline(message.author) && !offlineCommands ) {
+    if (!isOnline(message.author) && !offlineCommands) {
       message.react(NAK);
       message.reply("You are offline. Can't ready up.")
         .then((msg) => {
@@ -378,6 +376,7 @@ exports.cmds = {
       message.react(ACK);
 
       onlineTas[message.author.id] = {}; // Marks the author as 'online'
+      onlineTas[message.author.id].afk = false;
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
     }
   },
@@ -437,30 +436,28 @@ exports.cmds = {
    * @param {Object} message - Discord message object to interact with.
    */
   '!afk': (message) => {
-    if (TA_CHANNEL === message.channel.id) {
-      if(!isOnline(message.author)) {
-        message.react(NAK);
-        message.reply('You are not online.')
-          .then((msg) => {
-            msg.delete({
-              timeout: 5000,
-            });
+    if (TA_CHANNEL !== message.channel.id) return;
+    if(!isOnline(message.author)) {
+      message.react(NAK);
+      message.reply('You are not online.')
+        .then((msg) => {
+          msg.delete({
+            timeout: 5000,
           });
-        return;
-      }
+        });
+      return;
+    }
 
-      if(!isAFK(message.author)) {
-        afkTas[message.author.id] = {}; // Moves TA to AFK
-        message.reply(`You are now AFK. Hurry back, there are ${queue.length} people left in the queue.`);
-        message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
-        message.react(ACK);
-      } else {
-        delete afkTas[message.author.id]; // Removes TA from being AFK
-        message.reply("You are no longer AFK. Now, let's go answer some questions!");
-        message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is back and ready to answer questions! :wave:`);
-        message.react(ACK);
-      }
-      
+    if(onlineTas[message.author.id].afk) {
+      onlineTas[message.author.id].afk = true; // Moves TA to AFK
+      message.reply(`You are now AFK. Hurry back, there are ${queue.length} people left in the queue.`);
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
+      message.react(ACK);
+    } else {
+      onlineTas[message.author.id].afk = false; // Removes TA from being AFK
+      message.reply("You are no longer AFK. Now, let's go answer some questions!");
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is back and ready to answer questions! :wave:`);
+      message.react(ACK);
     }
   },
 
