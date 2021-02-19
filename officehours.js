@@ -391,7 +391,7 @@ exports.cmds = {
         delete onlineTas[message.author.id];
         message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
       }
-      n
+      
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
     }
