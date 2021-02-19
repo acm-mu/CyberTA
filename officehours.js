@@ -359,6 +359,7 @@ exports.cmds = {
       message.react(ACK);
 
       onlineTas[message.author.id] = {}; // Marks the author as 'online'
+      onlineTas[message.author.id].afk = false;
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
     }
   },
@@ -388,6 +389,38 @@ exports.cmds = {
   },
 
   /**
+   * TA's use this command if they need to be away from their keyboard for a moment.
+   * If they are already online, warn them.
+   *
+   * @param {Object} message - Discord message object to interact with.
+   */
+  '!afk': (message) => {
+    if (TA_CHANNEL !== message.channel.id) return;
+    if(!isOnline(message.author)) {
+      message.react(NAK);
+      message.reply('You are not online.')
+        .then((msg) => {
+          msg.delete({
+            timeout: 5000,
+          });
+        });
+      return;
+    }
+
+    if(onlineTas[message.author.id].afk) {
+      onlineTas[message.author.id].afk = true; // Moves TA to AFK
+      message.reply(`You are now AFK. Hurry back, there are ${queue.length} people left in the queue.`);
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
+      message.react(ACK);
+    } else {
+      onlineTas[message.author.id].afk = false; // Removes TA from being AFK
+      message.reply("You are no longer AFK. Now, let's go answer some questions!");
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is back and ready to answer questions! :wave:`);
+      message.react(ACK);
+    }
+  },
+
+  /**
    * Any user can use this command to see a list of available commands for them. (Role-specific)
    *
    * @param {Obejct} message - The Discord message object to interact with.
@@ -401,6 +434,7 @@ exports.cmds = {
         + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
         + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
         + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
+        + '!afk - enables/disables yourself as away from keyboard (AFK). Useful if you need to go grab something quick and will be right back.\n'
         + '!help - shows these commands.```');
       return;
     }
