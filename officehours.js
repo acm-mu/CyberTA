@@ -19,7 +19,12 @@ const hiddenTas = {};
 let offlineCommands = false;
 
 function readyHelper(message, list, index, authorId) {
-  if (list[authorId].last_ready_msg !== undefined) {
+
+  for(let i = 0; i < list.length; i+=1) {
+    console.log(list[i], " with message ", list[i].message);
+  }
+
+  /*if (list[authorId].last_ready_msg !== undefined) {
     list[authorId].last_ready_msg.delete();
     
   }
@@ -27,7 +32,7 @@ function readyHelper(message, list, index, authorId) {
     .then((reply) => {
     list[authorId].last_ready_msg = reply;
   });
-  list[authorId].last_helped_time = new Date();
+  list[authorId].last_helped_time = new Date();*/
 }
 
 function getNickname(message) {
@@ -420,7 +425,6 @@ exports.cmds = {
 
       delete onlineTas[message.author.id];
 
-      
       if(!isHidden(message.author)){
         message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
         message.react(ACK);
