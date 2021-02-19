@@ -343,7 +343,12 @@ exports.cmds = {
     dequeued.push(queue[readyIndex]);
     queue.splice(readyIndex, 1);
 
-    onlineTas[authorId].last_helped_time = new Date();
+    if(isOnline(message.author)) {
+      onlineTas[authorId].last_helped_time = new Date();
+    } else if(isHidden(message.author)) {
+      hiddenTas[authorId].last_helped_time = new Date();
+    }
+    
 
     message.react(ACK);
     message.delete({
