@@ -16,7 +16,6 @@ const queue = [];
 const dequeued = [];
 const onlineTas = {};
 let offlineCommands = false;
-let offlinePrintFlag = false;
 
 function getNickname(message) {
   const member = message.guild.member(message.author);
@@ -36,7 +35,6 @@ function index(member) {
 }
 
 const isOnline = (member) => member.id in onlineTas;
-const isHidden = (member) => member.id in hiddenTas;
 const contains = (member) => index(member) !== -1;
 
 exports.cmds = {
@@ -359,7 +357,6 @@ exports.cmds = {
     message.react(ACK);
     
     onlineTas[message.author.id] = {afk: false, hidden: false}; // Marks the author as 'online'
-    offlinePrintFlag = false;
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
   },
 
@@ -393,22 +390,18 @@ exports.cmds = {
       offlineCommands = true;
       onlineTas[message.author.id].hidden = true; // Moves TA to hidden
       message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is no longer taking questions. :x:`);
+      message.react(ACK);
     } else if(args[0] === 'full') {
       delete onlineTas[message.author.id];
       message.reply("You are now marked as offline. Some offline commands may still work if off-commands are enabled.");
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
+      message.react(ACK);
     } else {
       message.reply("The offline setting could not be set due to an invalid argument.");
       message.react(NAK);
       return;
     }
-
-    if(!offlinePrintFlag){
-      offlinePrintFlag = true;
-      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
-      message.react(ACK);
-    }
-
-    
   },
 
   /**
