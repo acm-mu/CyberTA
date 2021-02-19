@@ -20,6 +20,7 @@ let offlineCommands = false;
 
 function readyHelper(message, list, index, authorId) {
 
+  console.log("list length: ", list.length);
   for(let i = 0; i < list.length; i+=1) {
     console.log(list[i], " with message ", list[i].message);
   }
