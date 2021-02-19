@@ -319,15 +319,23 @@ exports.cmds = {
 
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
-
-    if (onlineTas[authorId].last_ready_msg !== undefined) {
-      onlineTas[authorId].last_ready_msg.delete();
-    }
-
-    msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
-      .then((reply) => {
+    if(isOnline(message.author)) {
+      if (onlineTas[authorId].last_ready_msg !== undefined) {
+        onlineTas[authorId].last_ready_msg.delete();
+        msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+          .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
       });
+      }
+    } else if (isHidden(message.author)) {
+      if (hiddenTas[authorId].last_ready_msg !== undefined) {
+        hiddenTas[authorId].last_ready_msg.delete();
+        msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+          .then((reply) => {
+        hiddenTas[authorId].last_ready_msg = reply;
+      });
+      }
+    }
 
     msg.delete();
     message.reply(`${getNickname(msg)} is next. There are ${queue.length - 1} people left in the queue.`);
@@ -398,6 +406,7 @@ exports.cmds = {
         hiddenTas[message.author.id] = {}; // Moves TA to hidden
         message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
       } else if(args[0] === 'full') {
+        offlineCommands = false;
         message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
       } else {
         message.reply("The offline setting could not be set due to an invalid argument.");
@@ -406,6 +415,8 @@ exports.cmds = {
       }
 
       delete onlineTas[message.author.id];
+
+      // TODO: fix this printing twice / refactor code so that it prints once.
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
     }
