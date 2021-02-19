@@ -451,7 +451,7 @@ exports.cmds = {
 
       if(!isAFK(message.author)) {
         afkTas[message.author.id] = {}; // Moves TA to AFK
-        message.reply(`You are now AFK. Hurry back, there are ${queue.length} left in the queue.`);
+        message.reply(`You are now AFK. Hurry back, there are ${queue.length} people left in the queue.`);
         message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
         message.react(ACK);
       } else {
