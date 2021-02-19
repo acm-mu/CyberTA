@@ -19,17 +19,15 @@ function getNickname(message) {
   return member.user.username;
 }
 
-function index(member) {
-  for (let i = 0; i < queue.length; i += 1) {
-    if (queue[i].member.id === member.id) {
-      return i;
-    }
+function getPosition(member) {
+  for (let index = 0; index < queue.length; index += 1) {
+    if (queue[index].author.id === member.id) return index;
   }
   return -1;
 }
 
 const isOnline = (member) => member.id in onlineTas;
-const contains = (member) => index(member) !== -1;
+const contains = (member) => getPosition(member) !== -1;
 
 exports.cmds = {
 
@@ -97,7 +95,7 @@ exports.cmds = {
         return;
       }
 
-      queue.splice(index(message.author), 1);
+      queue.splice(getPosition(message.author), 1);
       message.react(ACK);
       message.delete({ timeout: 5 * 1000 });
     }
@@ -147,7 +145,7 @@ exports.cmds = {
       let body = `\`\`\`nimrod\nThere are currently ${queue.length} people in the queue.`;
 
       if (contains(message.author)) {
-        body += `You are #${index(message.author) + 1}!`;
+        body += `You are #${getPosition(message.author) + 1}!`;
       }
 
       message.channel.send(`${body}\`\`\``);
