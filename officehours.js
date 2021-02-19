@@ -390,7 +390,7 @@ exports.cmds = {
     }
   },
 
-  '!off commands': (message, args) => {
+  '!off-commands': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
 
       if(args.length == 0) {
