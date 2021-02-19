@@ -395,8 +395,7 @@ exports.cmds = {
       message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
     } else if(args[0] === 'full') {
       delete onlineTas[message.author.id];
-      offlineCommands = false;
-      message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
+      message.reply("You are now marked as offline. Some offline commands may still work if off-commands are enabled.");
     } else {
       message.reply("The offline setting could not be set due to an invalid argument.");
       message.react(NAK);
