@@ -47,15 +47,18 @@ exports.cmds = {
    * quit, otherwise acknowledge.
    *
    * @param {Object} message - The Discord message object to interact with.
-   * @param {string[]} args - The words following the command that invoked this function
-   * from the discord message.
    */
-  '!next': (message, args) => {
+  '!next': (message) => {
     if (message.channel.id !== OFFICE_HOURS) return;
 
-    if (!Object.values(onlineTas).filter((onlineTa) => !onlineTa.hidden).length) {
+    if (Object.values(onlineTas).length === 0) {
       message.react(NAK);
       message.reply("Sorry there are no TA's on.");
+      return;
+    }
+    if (!Object.values(onlineTas).filter((onlineTa) => !onlineTa.hidden).length) {
+      message.react(NAK);
+      message.reply("⏰ Office hours are wrapping up and TA's are no longer taking new questions.");
       return;
     }
 
@@ -67,12 +70,7 @@ exports.cmds = {
       return;
     }
 
-    queue.push({
-      member: message.author,
-      desc: args.join(' '),
-      message,
-      timestamp: new Date(),
-    });
+    queue.push(message);
 
     message.react(ACK);
     message.reply(`You are now #${queue.length} in the queue.`)
@@ -116,10 +114,7 @@ exports.cmds = {
     }
 
     /* Goes through entire queue and finds the student's 'next' message and removes it */
-    for (let i = queue.length - 1; i >= 0; i -= 1) {
-      const msg = queue[i].message;
-      msg.delete();
-    }
+    for (let i = queue.length - 1; i >= 0; i -= 1) queue[i].delete();
 
     queue.length = 0;
     message.channel.send('```nimrod\nThe queue is now empty!```');
@@ -160,10 +155,9 @@ exports.cmds = {
       const body = [];
 
       for (let i = 0; i < queue.length; i += 1) {
-        const { desc, member: { username }, timestamp } = queue[i];
-        const waitTime = moment(timestamp).fromNow();
-
-        body.push(`${i}) ${username} "${desc}"\t\t [${waitTime}]`);
+        const msg = queue[i];
+        const desc = msg.content.substring(6); // remove '!next '
+        body.push(`${i}) ${getNickname(msg)} "${desc}"\t\t [${moment(msg.createdTimestamp).fromNow()}]`);
       }
 
       message.channel.send(`\`\`\`nimrod\n${body.join('\n')}\`\`\``);
@@ -267,9 +261,9 @@ exports.cmds = {
     }
 
     const authorId = message.author.id;
-    const msg = queue[readyIndex].message;
+    const msg = queue[readyIndex];
 
-    if(onlineTas[authorId].last_ready_msg !== undefined) {
+    if (onlineTas[authorId].last_ready_msg !== undefined) {
       onlineTas[authorId].last_ready_msg.delete();
     }
 
