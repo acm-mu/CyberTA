@@ -2,6 +2,8 @@
 const moment = require('moment');
 
 const ACK = '👍';
+const ON = '✔️';
+const OFF = '❌';
 const NAK = '🛑';
 const WARN = '⚠️';
 
@@ -13,6 +15,7 @@ const {
 const queue = [];
 const dequeued = [];
 const onlineTas = {};
+let offlineCommands = false;
 
 function getNickname(message) {
   const member = message.guild.member(message.author);
@@ -149,7 +152,7 @@ exports.cmds = {
   },
 
   /**
-   * TA's can use the !quue command to view the current items in the queue.
+   * TA's can use the !queue command to view the current items in the queue.
    * Student's can use the !queue command to view how many people are in the queue,
    * and where they are (if they are in the queue).
    *
@@ -225,7 +228,7 @@ exports.cmds = {
    */
   '!remove': (message, args) => {
     if (TA_CHANNEL !== message.channel.id) return;
-    if (!isOnline(message.author)) {
+    if (!isOnline(message.author) && !offlineCommands) {
       message.react(NAK);
       message.reply("You are offline. Can't remove.")
         .then((msg) => {
@@ -279,7 +282,7 @@ exports.cmds = {
    */
   '!ready': (message, args) => {
     if (TA_CHANNEL !== message.channel.id) return;
-    if (!isOnline(message.author)) {
+    if (!isOnline(message.author) && !offlineCommands ) {
       message.react(NAK);
       message.reply("You are offline. Can't ready up.")
         .then((msg) => {
@@ -384,6 +387,46 @@ exports.cmds = {
       delete onlineTas[message.author.id];
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
+    }
+  },
+
+  '!off commands': (message, args) => {
+    if (TA_CHANNEL === message.channel.id) {
+
+      if(args.length == 0) {
+        message.react(ACK);
+        offlineCommands = !offlineCommands;
+        if(offlineCommands) {
+          message.reply('Offline commands are turned `ON`.');
+          message.react(ON);
+        } else {
+          message.reply('Offline commands are turned `OFF`.');
+          message.react(OFF);
+        }
+        return;
+      }
+
+      if(args[0] == "on") {
+        message.react(ACK);
+        offlineCommands = true;
+        message.reply('Offline commands are turned `ON`.');
+        message.react(ON);
+      } else if (args[0] == "off") {
+        message.react(ACK);
+        offlineCommands = false;
+        message.reply('Offline commands are turned `OFF`.');
+        message.react(OFF);
+      } else {
+        message.react(NAK);
+        message.reply('The offline command setting could not be set due to an invalid argument.')
+          .then((msg) => {
+            msg.delete({
+              timeout: 5000,
+            });
+          });
+      }
+
+      return
     }
   },
 
