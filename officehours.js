@@ -95,6 +95,8 @@ exports.cmds = {
 
       queue.splice(getPosition(message.author), 1);
       message.react(ACK);
+      message.reply('Goodbye :wave:')
+        .then((msg) => msg.delete({ timeout: 10 * 1000 }));
       message.delete({ timeout: 5 * 1000 });
     }
   },
