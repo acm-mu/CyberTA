@@ -15,21 +15,7 @@ const {
 const queue = [];
 const dequeued = [];
 const onlineTas = {};
-const hiddenTas = {};
 let offlineCommands = false;
-
-function readyMessageSender(message, list, queueMessage) {
-  if (list.last_ready_msg !== undefined) {
-    list.last_ready_msg.delete();
-  }
-
-  queueMessage.reply(`${getNickname(message)} is ready for you. Move to their office.`)
-    .then((reply) => {
-    list.last_ready_msg = reply;
-  });
-  
-  list.last_helped_time = new Date();
-}
 
 function getNickname(message) {
   const member = message.guild.member(message.author);
@@ -49,7 +35,6 @@ function index(member) {
 }
 
 const isOnline = (member) => member.id in onlineTas;
-const isHidden = (member) => member.id in hiddenTas;
 const contains = (member) => index(member) !== -1;
 
 exports.cmds = {
@@ -333,15 +318,16 @@ exports.cmds = {
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
 
-    if(isOnline(message.author)) {
-      readyMessageSender(message, onlineTas[authorId], msg);
-    } else if (isHidden(message.author)) {
-      readyMessageSender(message, hiddenTas[authorId], msg);
-    } else {
-      message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
-      message.react(NAK);
-      return;
+    if (onlineTas[authorId].last_ready_msg !== undefined) {
+      onlineTas[authorId].last_ready_msg.delete();
     }
+  
+    msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+      .then((reply) => {
+      onlineTas[authorId].last_ready_msg = reply;
+    });
+    
+    onlineTas[authorId].last_helped_time = new Date();
 
     msg.delete();
     message.reply(`${getNickname(msg)} is next. There are ${queue.length - 1} people left in the queue.`);
@@ -377,6 +363,7 @@ exports.cmds = {
 
       onlineTas[message.author.id] = {}; // Marks the author as 'online'
       onlineTas[message.author.id].afk = false;
+      
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
     }
   },
@@ -390,7 +377,7 @@ exports.cmds = {
    */
   '!offline': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
-      if (!isOnline(message.author) && !isHidden(message.author)) {
+      if (!isOnline(message.author)) {
         message.react(NAK);
         message.reply('You are already offline.')
           .then((msg) => {
@@ -409,9 +396,10 @@ exports.cmds = {
 
       if(args[0] === 'partial') {
         offlineCommands = true;
-        hiddenTas[message.author.id] = {}; // Moves TA to hidden
+        offlineTas[message.author.id].hidden = true; // Moves TA to hidden
         message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
       } else if(args[0] === 'full') {
+        delete offlineTas[message.author.id];
         offlineCommands = false;
         message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
       } else {
@@ -420,9 +408,7 @@ exports.cmds = {
         return;
       }
 
-      delete onlineTas[message.author.id];
-
-      if(!isHidden(message.author)){
+      if(!offlineTas[message.author.id].hidden) {
         message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
         message.react(ACK);
       }
