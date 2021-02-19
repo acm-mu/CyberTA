@@ -2,15 +2,10 @@
 const moment = require('moment');
 
 const ACK = '👍';
-const ON = '✔️';
-const OFF = '❌';
 const NAK = '🛑';
 const WARN = '⚠️';
 
-const {
-  OFFICE_HOURS,
-  TA_CHANNEL,
-} = process.env;
+const { OFFICE_HOURS, TA_CHANNEL } = process.env;
 
 const queue = [];
 const dequeued = [];
@@ -129,10 +124,7 @@ exports.cmds = {
     }
 
     queue.length = 0;
-    if (queue.length === 0) {
-      message.channel.send('```nimrod\nThe queue is now empty!```');
-    }
-
+    message.channel.send('```nimrod\nThe queue is now empty!```');
     message.react(ACK);
   },
 
@@ -276,8 +268,6 @@ exports.cmds = {
       return;
     }
 
-    
-
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
 
@@ -288,8 +278,8 @@ exports.cmds = {
     msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
       .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
-    });
-    
+      });
+
     onlineTas[authorId].last_helped_time = new Date();
 
     msg.delete();
@@ -316,14 +306,14 @@ exports.cmds = {
         .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
- 
+
     message.react(ACK);
- 
+
     if (args.length > 0 && args[0] === 'partial') {
       onlineTas[message.author.id] = { afk: false, hidden: true };
       return;
     }
- 
+
     onlineTas[message.author.id] = { afk: false, hidden: false }; // Marks the author as 'online'
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
   },
@@ -332,7 +322,7 @@ exports.cmds = {
    * TA's use this command to make themselves appear offline, and notify the students.
    * If they are already offline, warn them.
    *
-   * @param {Object} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord message object to interact with.
    * @param {string[]} args - The extent to which a TA wants to go offline.
    */
   '!offline': (message, args) => {
@@ -407,17 +397,16 @@ exports.cmds = {
         + "!queue - view the queue w/ username, issue description, and how long they've been waiting.\n"
         + '!undo - quickly undo the ready command that removed them from the queue.\n'
         + '!remove [index] - removes user from queue at certain index. Does not alert the user.\n'
-        + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
+        + "!ready <index> - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
         + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
-        + "!online [partial] - sets your status to online and notifies students in their channel that you are ready to answer questions. Optional 'partial' paramerter can be used if you want to go online, but not notify students.\n"
-        + '!offline [partial | full] - sets your status to offline.\n\t With the partial flag, allows you to still ready students and access various commands.\n\t With the full flag, restricts you from being able to access any offline commands.\n'
+        + "!online <partial> - sets your status to online and notifies students in their channel that you are ready to answer questions. Optional 'partial' parameter can be used if you want to go online, but not notify students.\n"
         + '!afk - enables/disables yourself as away from keyboard (AFK). Useful if you need to grab something quick and will be right back.\n'
         + '!help - shows these commands.```');
       return;
     }
     message.reply('```'
       + "!next [issue] - adds a user to queue and responds with user's position in queue. Please provide an issue.\n"
-      + "!queue - see your position in the queue.\n"
+      + '!queue - see your position in the queue.\n'
       + '!leave - removes you from the queue.\n'
       + '\nhelp - provides a list of commands and their functions.```');
   },
