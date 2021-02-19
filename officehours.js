@@ -314,12 +314,15 @@ exports.cmds = {
       return;
     }
 
+    
+
+    const authorId = message.author.id;
+    const msg = queue[readyIndex].message;
+
     if(onlineTas[authorId].last_ready_msg !== undefined) {
       onlineTas[authorId].last_ready_msg.delete();
     }
 
-    const authorId = message.author.id;
-    const msg = queue[readyIndex].message;
     msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
       .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
