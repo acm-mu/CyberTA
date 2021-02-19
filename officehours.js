@@ -367,10 +367,10 @@ exports.cmds = {
   },
 
   /**
-   * TA's use this command to make themselves ppear offline, and notify the students.
+   * TA's use this command to make themselves appear offline, and notify the students.
    * If they are already offline, warn them.
    *
-   * @param {*} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord messsage object to interact with.
    */
   '!offline': (message) => {
     if (TA_CHANNEL === message.channel.id) {
@@ -390,33 +390,56 @@ exports.cmds = {
     }
   },
 
+  /**
+   * TA's use this command to allow themselves to enable and disable certain commands while offline.
+   *
+   * @param {Object} message - The discord messsage object to interact with.
+   * @param {string[]} args - If provided the first element in the array should be a string
+   * representing whether or not to enable the command.
+   */
   '!off-commands': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
 
       if(args.length == 0) {
+
         message.react(ACK);
         offlineCommands = !offlineCommands;
+
         if(offlineCommands) {
+
           message.reply('Offline commands are turned `ON`.');
           message.react(ON);
+
         } else {
+
           message.reply('Offline commands are turned `OFF`.');
           message.react(OFF);
+
         }
+
         return;
       }
 
       if(args[0] == "on") {
+
         message.react(ACK);
+
         offlineCommands = true;
+
         message.reply('Offline commands are turned `ON`.');
         message.react(ON);
+
       } else if (args[0] == "off") {
+
         message.react(ACK);
+
         offlineCommands = false;
+
         message.reply('Offline commands are turned `OFF`.');
         message.react(OFF);
+
       } else {
+
         message.react(NAK);
         message.reply('The offline command setting could not be set due to an invalid argument.')
           .then((msg) => {
@@ -424,6 +447,7 @@ exports.cmds = {
               timeout: 5000,
             });
           });
+
       }
 
       return
@@ -444,6 +468,7 @@ exports.cmds = {
         + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
         + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
         + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
+        + '!off-commands [on, off] - enables/disables certain commands (ready, etc.) while TAs are offline.\n'
         + '!help - shows these commands.```');
       return;
     }
