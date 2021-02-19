@@ -332,27 +332,18 @@ exports.cmds = {
       return;
     }
 
-    if (args.length === 0) {
-      message.reply("Please add a valid argument (partial, full) to set your offline status.");
-      message.react(NAK);
+    message.react(ACK);
+
+    if (args.length > 0 && args[0] === 'partial') {
+      onlineTas[message.author.id].hidden = true; // Moves TA to hidden
+      message.reply('You are now marked as offline, but you are still able to use certain commands offline.');
+      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is no longer taking questions. :x:`);
       return;
     }
 
-    if(args[0] === 'partial') {
-      onlineTas[message.author.id].hidden = true; // Moves TA to hidden
-      message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
-      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is no longer taking questions. :x:`);
-      message.react(ACK);
-    } else if(args[0] === 'full') {
-      delete onlineTas[message.author.id];
-      message.reply("You are now marked as offline. Some commands, like !ready, will not work.");
-      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
-      message.react(ACK);
-    } else {
-      message.reply("The offline setting could not be set due to an invalid argument.");
-      message.react(NAK);
-      return;
-    }
+    delete onlineTas[message.author.id];
+    message.reply('You are now marked as offline. Some commands, like !ready, will not work.');
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
   },
 
   /**
@@ -398,6 +389,7 @@ exports.cmds = {
         + "!ready <index> - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
         + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
         + "!online <partial> - sets your status to online and notifies students in their channel that you are ready to answer questions. Optional 'partial' parameter can be used if you want to go online, but not notify students.\n"
+        + '!offline <partial> - sets your status to offline.\n\t With the partial flag, allows you to still ready students and access various commands.\n\t With the full flag, restricts you from being able to access any offline commands.\n'
         + '!afk - enables/disables yourself as away from keyboard (AFK). Useful if you need to grab something quick and will be right back.\n'
         + '!help - shows these commands.```');
       return;
