@@ -18,7 +18,7 @@ const onlineTas = {};
 const hiddenTas = {};
 let offlineCommands = false;
 
-function readyHelper(message, listAtAuthorId, listAtIndex, queueMessage) {
+function readyHelper(message, listAtAuthorId, queueMessage) {
 
   // console.log("list length: ", list.length);
   // for(let i = 0; i < list.length; i+=1) {
@@ -340,9 +340,9 @@ exports.cmds = {
     const msg = queue[readyIndex].message;
 
     if(isOnline(message.author)) {
-      readyHelper(message, onlineTas[authorId], onlineTas[readyIndex]);
+      readyHelper(message, onlineTas[authorId], msg);
     } else if (isHidden(message.author)) {
-      readyHelper(message, hiddenTas[authorId], hiddenTas[readyIndex]);
+      readyHelper(message, hiddenTas[authorId], msg);
     } else {
       message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
       message.react(NAK);
