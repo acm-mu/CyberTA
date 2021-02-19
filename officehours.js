@@ -319,17 +319,6 @@ exports.cmds = {
 
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
-
-    if(isOnline(message.author)) {
-      readyMessageSender(message, onlineTas[authorId], msg);
-    } else if (isHidden(message.author)) {
-      readyMessageSender(message, hiddenTas[authorId], msg);
-    } else {
-      message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
-      message.react(NAK);
-      return;
-    }
-  
     msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
       .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
