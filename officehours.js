@@ -322,19 +322,21 @@ exports.cmds = {
     if(isOnline(message.author)) {
       if (onlineTas[authorId].last_ready_msg !== undefined) {
         onlineTas[authorId].last_ready_msg.delete();
-        msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+        
+      }
+      msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
           .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
       });
-      }
     } else if (isHidden(message.author)) {
       if (hiddenTas[authorId].last_ready_msg !== undefined) {
         hiddenTas[authorId].last_ready_msg.delete();
-        msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+        
+      }
+      msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
           .then((reply) => {
         hiddenTas[authorId].last_ready_msg = reply;
       });
-      }
     }
 
     msg.delete();
