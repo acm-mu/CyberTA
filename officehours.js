@@ -69,14 +69,8 @@ exports.cmds = {
     if (contains(message.author)) {
       message.react(NAK);
       message.reply('You are already in the queue.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-          message.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
+      message.delete({ timeout: 5 * 1000 });
       return;
     }
 
@@ -89,11 +83,7 @@ exports.cmds = {
 
     message.react(ACK);
     message.reply(`You are now #${queue.length} in the queue.`)
-      .then((msg) => {
-        msg.delete({
-          timeout: 10 * 1000,
-        });
-      });
+      .then((msg) => msg.delete({ timeout: 10 * 1000 }));
   },
 
   /**
@@ -108,17 +98,13 @@ exports.cmds = {
     if (OFFICE_HOURS === message.channel.id) {
       if (!contains(message.author)) {
         message.react(NAK);
-        message.delete({
-          timeout: 10 * 1000,
-        });
+        message.delete({ timeout: 10 * 1000 });
         return;
       }
 
       queue.splice(index(message.author), 1);
       message.react(ACK);
-      message.delete({
-        timeout: 10 * 1000,
-      });
+      message.delete({ timeout: 5 * 1000 });
     }
   },
 
@@ -230,28 +216,16 @@ exports.cmds = {
     if (!isOnline(message.author)) {
       message.react(NAK);
       message.reply("You are offline. Can't remove.")
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
 
     if (args.length === 0 || Number.isNaN(args[0])) {
       message.react(NAK);
       message.reply('Please provide an index to remove.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       message.reply('`!remove <index>`')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
 
@@ -259,11 +233,7 @@ exports.cmds = {
     if (removeIndex >= queue.length) {
       message.react(NAK);
       message.reply('Invalid index.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
 
@@ -284,11 +254,7 @@ exports.cmds = {
     if (!isOnline(message.author)) {
       message.react(NAK);
       message.reply("You are offline. Can't ready up.")
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
 
@@ -306,11 +272,7 @@ exports.cmds = {
     if (readyIndex < 0 || readyIndex >= queue.length) {
       message.react(NAK);
       message.reply('Invalid index.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
 
@@ -337,9 +299,7 @@ exports.cmds = {
     queue.splice(readyIndex, 1);
 
     message.react(ACK);
-    message.delete({
-      timeout: 5000,
-    });
+    message.delete({ timeout: 5 * 1000 });
   },
 
   /**
@@ -353,11 +313,7 @@ exports.cmds = {
     if (TA_CHANNEL !== message.channel.id) return;
     if (isOnline(message.author) && !onlineTas[message.author.id].hidden) {
       message.reply('You are already online.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 5 * 1000 }));
       return;
     }
  
@@ -384,11 +340,7 @@ exports.cmds = {
     if (!isOnline(message.author)) {
       message.react(NAK);
       message.reply('You are already offline.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 10 * 1000 }));
       return;
     }
 
@@ -426,11 +378,7 @@ exports.cmds = {
     if (!isOnline(message.author)) {
       message.react(NAK);
       message.reply('You are not online.')
-        .then((msg) => {
-          msg.delete({
-            timeout: 5000,
-          });
-        });
+        .then((msg) => msg.delete({ timeout: 10 * 1000 }));
       return;
     }
 
