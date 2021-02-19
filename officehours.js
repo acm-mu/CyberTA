@@ -18,22 +18,22 @@ const onlineTas = {};
 const hiddenTas = {};
 let offlineCommands = false;
 
-function readyHelper(message, ...list, index, authorId) {
+function readyHelper(message, listAtAuthorId, listAtIndex) {
 
-  console.log("list length: ", list.length);
-  for(let i = 0; i < list.length; i+=1) {
-    console.log(list[i], " with message ", list[i].message);
-  }
+  // console.log("list length: ", list.length);
+  // for(let i = 0; i < list.length; i+=1) {
+  //   console.log(list[i], " with message ", list[i].message);
+  // }
 
-  /*if (list[authorId].last_ready_msg !== undefined) {
-    list[authorId].last_ready_msg.delete();
+  if (listAtAuthorId.last_ready_msg !== undefined) {
+    listAtAuthorId.last_ready_msg.delete();
     
   }
-  list[index].message.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+  listAtIndex.message.reply(`${getNickname(message)} is ready for you. Move to their office.`)
     .then((reply) => {
-    list[authorId].last_ready_msg = reply;
+    listAtAuthorId.last_ready_msg = reply;
   });
-  list[authorId].last_helped_time = new Date();*/
+  listAtAuthorId.last_helped_time = new Date();
 }
 
 function getNickname(message) {
@@ -340,9 +340,9 @@ exports.cmds = {
     const msg = queue[readyIndex].message;
 
     if(isOnline(message.author)) {
-      readyHelper(message, onlineTas, readyIndex, authorId);
+      readyHelper(message, onlineTas[authorId], onlineTas[readyIndex]);
     } else if (isHidden(message.author)) {
-      readyHelper(message, hiddenTas, readyIndex, authorId);
+      readyHelper(message, hiddenTas[authorId], hiddenTas[readyIndex]);
     } else {
       message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
       message.react(NAK);
