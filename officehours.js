@@ -18,7 +18,7 @@ const onlineTas = {};
 const hiddenTas = {};
 let offlineCommands = false;
 
-function readyHelper(message, list, index, authorId) {
+function readyHelper(message, ...list, index, authorId) {
 
   console.log("list length: ", list.length);
   for(let i = 0; i < list.length; i+=1) {
