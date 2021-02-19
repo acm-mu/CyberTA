@@ -18,6 +18,18 @@ const onlineTas = {};
 const hiddenTas = {};
 let offlineCommands = false;
 
+function readyHelper(message, list, index, authorId) {
+  if (list[authorId].last_ready_msg !== undefined) {
+    list[authorId].last_ready_msg.delete();
+    
+  }
+  list[index].message.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+    .then((reply) => {
+    list[authorId].last_ready_msg = reply;
+  });
+  list[authorId].last_helped_time = new Date();
+}
+
 function getNickname(message) {
   const member = message.guild.member(message.author);
   if (member.nickname !== null) {
@@ -38,6 +50,7 @@ function index(member) {
 const isOnline = (member) => member.id in onlineTas;
 const isHidden = (member) => member.id in hiddenTas;
 const contains = (member) => index(member) !== -1;
+
 
 exports.cmds = {
 
@@ -319,24 +332,15 @@ exports.cmds = {
 
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
+
     if(isOnline(message.author)) {
-      if (onlineTas[authorId].last_ready_msg !== undefined) {
-        onlineTas[authorId].last_ready_msg.delete();
-        
-      }
-      msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
-          .then((reply) => {
-        onlineTas[authorId].last_ready_msg = reply;
-      });
+      readyHelper(message, onlineTas, readyIndex, authorId);
     } else if (isHidden(message.author)) {
-      if (hiddenTas[authorId].last_ready_msg !== undefined) {
-        hiddenTas[authorId].last_ready_msg.delete();
-        
-      }
-      msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
-          .then((reply) => {
-        hiddenTas[authorId].last_ready_msg = reply;
-      });
+      readyHelper(message, hiddenTas, readyIndex, authorId);
+    } else {
+      message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
+      message.react(NAK);
+      return;
     }
 
     msg.delete();
@@ -344,13 +348,6 @@ exports.cmds = {
 
     dequeued.push(queue[readyIndex]);
     queue.splice(readyIndex, 1);
-
-    if(isOnline(message.author)) {
-      onlineTas[authorId].last_helped_time = new Date();
-    } else if(isHidden(message.author)) {
-      hiddenTas[authorId].last_helped_time = new Date();
-    }
-    
 
     message.react(ACK);
     message.delete({
