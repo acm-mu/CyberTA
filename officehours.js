@@ -274,8 +274,6 @@ exports.cmds = {
         onlineTas[authorId].last_ready_msg = reply;
       });
 
-    onlineTas[authorId].last_helped_time = new Date();
-
     msg.delete();
     message.reply(`${message.author} is next. There are ${queue.length - 1} people left in the queue.`);
 
@@ -357,16 +355,16 @@ exports.cmds = {
       return;
     }
 
+    message.react(ACK);
+
     if (onlineTas[message.author.id].afk) {
       onlineTas[message.author.id].afk = true; // Moves TA to AFK
       message.reply(`You are now AFK. ${queue.length ? `Hurry back, there are ${queue.length} people left in the queue.` : ''}`);
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
-      message.react(ACK);
     } else {
       onlineTas[message.author.id].afk = false; // Removes TA from being AFK
       message.reply("You are no longer AFK. Now, let's go answer some questions!");
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is back and ready to answer questions! :wave:`);
-      message.react(ACK);
     }
   },
 
