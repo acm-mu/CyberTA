@@ -16,6 +16,7 @@ const queue = [];
 const dequeued = [];
 const onlineTas = {};
 let offlineCommands = false;
+let offlinePrintFlag = false;
 
 function getNickname(message) {
   const member = message.guild.member(message.author);
@@ -35,6 +36,7 @@ function index(member) {
 }
 
 const isOnline = (member) => member.id in onlineTas;
+const isHidden = (member) => member.id in hiddenTas;
 const contains = (member) => index(member) !== -1;
 
 exports.cmds = {
@@ -61,7 +63,7 @@ exports.cmds = {
   '!next': (message, args) => {
     if (message.channel.id !== OFFICE_HOURS) return;
 
-    if (Object.keys(onlineTas).length === 0) {
+    if (!Object.values(onlineTas).filter((onlineTa) => !onlineTa.hidden).length) {
       message.react(NAK);
       message.reply("Sorry there are no TA's on.");
       return;
@@ -156,7 +158,7 @@ exports.cmds = {
    * Student's can use the !queue command to view how many people are in the queue,
    * and where they are (if they are in the queue).
    *
-   * @param {*} message - The Discord message object to interact with.
+   * @param {Object} message - The Discord message object to interact with.
    */
   '!queue': (message) => {
     if (OFFICE_HOURS === message.channel.id) {
@@ -196,14 +198,14 @@ exports.cmds = {
   },
 
   /**
-   * If a TA accidently readied a student, and needs to put them back in the queue.
+   * If a TA accidentally readied a student, and needs to put them back in the queue.
    * '!undo' will automatically put the last dequeued member back to the front of the queue.
    *
    * If the bot does not remember any recent readied students, it will tell the TA.
    *
    * There is currently no bot process for letting the user know it was an accident.
    *
-   * @param {Object} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord message object to interact with.
    */
   '!undo': (message) => {
     if (TA_CHANNEL === message.channel.id) {
@@ -276,7 +278,7 @@ exports.cmds = {
    * TA's can use this command to notify students they are ready for them. If no index is provided,
    * it will use the first item in the queue. If the queue is empty warn the user.
    *
-   * @param {Object} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord message object to interact with.
    * @param {string[]} args - If provided the first element in the array should be a string number
    * representing a index in the queue to ready up.
    */
@@ -318,22 +320,28 @@ exports.cmds = {
     const authorId = message.author.id;
     const msg = queue[readyIndex].message;
 
-    if (onlineTas[authorId].last_ready_msg !== undefined) {
-      onlineTas[authorId].last_ready_msg.delete();
+    if(isOnline(message.author)) {
+      readyMessageSender(message, onlineTas[authorId], msg);
+    } else if (isHidden(message.author)) {
+      readyMessageSender(message, hiddenTas[authorId], msg);
+    } else {
+      message.reply("An error occured trying to ready a student due to an invalid online/offline state. Please try again.");
+      message.react(NAK);
+      return;
     }
-
+  
     msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
       .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
-      });
+    });
+    
+    onlineTas[authorId].last_helped_time = new Date();
 
     msg.delete();
     message.reply(`${getNickname(msg)} is next. There are ${queue.length - 1} people left in the queue.`);
 
     dequeued.push(queue[readyIndex]);
     queue.splice(readyIndex, 1);
-
-    onlineTas[authorId].last_helped_time = new Date();
 
     message.react(ACK);
     message.delete({
@@ -348,22 +356,22 @@ exports.cmds = {
    * @param {Object} message - Discord message object to interact with.
    */
   '!online': (message) => {
-    if (TA_CHANNEL === message.channel.id) {
-      if (isOnline(message.author)) {
-        message.reply('You are already online.')
-          .then((msg) => {
-            msg.delete({
-              timeout: 5000,
-            });
+    if (TA_CHANNEL !== message.channel.id) return;
+    if (isOnline(message.author) && !onlineTas[message.author.id].hidden) {
+      message.reply('You are already online.')
+        .then((msg) => {
+          msg.delete({
+            timeout: 5000,
           });
-        return;
-      }
-
-      message.react(ACK);
-
-      onlineTas[message.author.id] = {}; // Marks the author as 'online'
-      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
+        });
+      return;
     }
+
+    message.react(ACK);
+
+    onlineTas[message.author.id] = {afk: false, hidden: false}; // Marks the author as 'online'
+    offlinePrintFlag = false;
+    message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
   },
 
   /**
@@ -371,30 +379,48 @@ exports.cmds = {
    * If they are already offline, warn them.
    *
    * @param {Object} message - The discord messsage object to interact with.
+   * @param {string[]} args - The extent to which a TA wants to go offline.
    */
-  '!offline': (message) => {
-    if (TA_CHANNEL === message.channel.id) {
-      if (!isOnline(message.author)) {
-        message.react(NAK);
-        message.reply('You are already offline.')
-          .then((msg) => {
-            msg.delete({
-              timeout: 5000,
-            });
+  '!offline': (message, args) => {
+    if (TA_CHANNEL !== message.channel.id) return;
+    if (!isOnline(message.author)) {
+      message.react(NAK);
+      message.reply('You are already offline.')
+        .then((msg) => {
+          msg.delete({
+            timeout: 5000,
           });
-        return;
-      }
+        });
+      return;
+    }
 
-      if(offlineCommands) {
-        message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
-      } else {
-        delete onlineTas[message.author.id];
-        message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
-      }
-      
+    if (args.length === 0) {
+      message.reply("Please add a valid argument (partial, full) to set your offline status.");
+      message.react(NAK);
+      return;
+    }
+
+    if(args[0] === 'partial') {
+      offlineCommands = true;
+      onlineTas[message.author.id].hidden = true; // Moves TA to hidden
+      message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
+    } else if(args[0] === 'full') {
+      delete onlineTas[message.author.id];
+      offlineCommands = false;
+      message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
+    } else {
+      message.reply("The offline setting could not be set due to an invalid argument.");
+      message.react(NAK);
+      return;
+    }
+
+    if(!offlinePrintFlag){
+      offlinePrintFlag = true;
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
     }
+
+    
   },
 
   /**
@@ -406,47 +432,31 @@ exports.cmds = {
    */
   '!off-commands': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
-
       if(args.length === 0) {
-
         message.react(ACK);
         offlineCommands = !offlineCommands;
 
         if(offlineCommands) {
-
           message.reply('Offline commands are turned `ON`.');
           message.react(ON);
-
         } else {
-
           message.reply('Offline commands are turned `OFF`.');
           message.react(OFF);
-
         }
-
         return;
       }
 
       if(args[0] === "on") {
-
         message.react(ACK);
-
         offlineCommands = true;
-
         message.reply('Offline commands are turned `ON`.');
         message.react(ON);
-
       } else if (args[0] == "off") {
-
         message.react(ACK);
-
         offlineCommands = false;
-
         message.reply('Offline commands are turned `OFF`.');
         message.react(OFF);
-
       } else {
-
         message.react(NAK);
         message.reply('The offline command setting could not be set due to an invalid argument.')
           .then((msg) => {
@@ -454,17 +464,15 @@ exports.cmds = {
               timeout: 5000,
             });
           });
-
       }
 
-      return
     }
   },
 
   /**
    * Any user can use this command to see a list of available commands for them. (Role-specific)
    *
-   * @param {Obejct} message - The Discord message object to interact with.
+   * @param {Object} message - The Discord message object to interact with.
    */
   '!help': (message) => {
     if (TA_CHANNEL === message.channel.id) {
@@ -472,10 +480,13 @@ exports.cmds = {
         + '!ping - simple test that responds with "pong".\n'
         + "!queue - view the queue w/ username, issue description, and how long they've been waiting.\n"
         + '!undo - quickly undo the ready command that removed them from the queue.\n'
-        + '!remove <index> - removes user from queue at certain index. Does not alert the user.\n'
+        + '!remove [index] - removes user from queue at certain index. Does not alert the user.\n'
         + "!ready [index] - removes user from queue at index (top if index isn't provided). Alerts the user that the TA is ready.\n"
         + '!clear - removes all users from the queue and removes any next messages that were in the chat.\n'
-        + '!off-commands [on, off] - enables/disables certain commands (ready, etc.) while TAs are offline.\n'
+        + '!online - sets your status to online and notifies students in their channel that you are ready to answer questions.\n'
+        + '!offline [partial | full] - sets your status to offline.\n\t With the partial flag, allows you to still ready students and access various commands.\n\t With the full flag, restricts you from being able to access any offline commands.\n'
+        + '!off-commands [on | off] - enables/disables certain commands (ready, etc.) while TAs are offline.\n'
+        + '!afk - enables/disables yourself as away from keyboard (AFK). Useful if you need to grab something quick and will be right back.\n'
         + '!help - shows these commands.```');
       return;
     }
