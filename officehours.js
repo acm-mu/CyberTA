@@ -149,11 +149,11 @@ exports.cmds = {
   },
 
   /**
-   * TA's can use the !quue command to view the current items in the queue.
+   * TA's can use the !queue command to view the current items in the queue.
    * Student's can use the !queue command to view how many people are in the queue,
    * and where they are (if they are in the queue).
    *
-   * @param {*} message - The Discord message object to interact with.
+   * @param {Object} message - The Discord message object to interact with.
    */
   '!queue': (message) => {
     if (OFFICE_HOURS === message.channel.id) {
@@ -193,14 +193,14 @@ exports.cmds = {
   },
 
   /**
-   * If a TA accidently readied a student, and needs to put them back in the queue.
+   * If a TA accidentally readied a student, and needs to put them back in the queue.
    * '!undo' will automatically put the last dequeued member back to the front of the queue.
    *
    * If the bot does not remember any recent readied students, it will tell the TA.
    *
    * There is currently no bot process for letting the user know it was an accident.
    *
-   * @param {Object} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord message object to interact with.
    */
   '!undo': (message) => {
     if (TA_CHANNEL === message.channel.id) {
@@ -273,7 +273,7 @@ exports.cmds = {
    * TA's can use this command to notify students they are ready for them. If no index is provided,
    * it will use the first item in the queue. If the queue is empty warn the user.
    *
-   * @param {Object} message - The discord messsage object to interact with.
+   * @param {Object} message - The discord message object to interact with.
    * @param {string[]} args - If provided the first element in the array should be a string number
    * representing a index in the queue to ready up.
    */
@@ -358,17 +358,16 @@ exports.cmds = {
 
       message.react(ACK);
 
-      onlineTas[message.author.id] = {}; // Marks the author as 'online'
-      onlineTas[message.author.id].afk = false;
+      onlineTas[message.author.id] = { afk: false }; // Marks the author as 'online'
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions! :wave:`);
     }
   },
 
   /**
-   * TA's use this command to make themselves ppear offline, and notify the students.
+   * TA's use this command to make themselves appear offline, and notify the students.
    * If they are already offline, warn them.
    *
-   * @param {*} message - The discord messsage object to interact with.
+   * @param {*} message - The discord message object to interact with.
    */
   '!offline': (message) => {
     if (TA_CHANNEL === message.channel.id) {
@@ -396,7 +395,7 @@ exports.cmds = {
    */
   '!afk': (message) => {
     if (TA_CHANNEL !== message.channel.id) return;
-    if(!isOnline(message.author)) {
+    if (!isOnline(message.author)) {
       message.react(NAK);
       message.reply('You are not online.')
         .then((msg) => {
@@ -407,9 +406,9 @@ exports.cmds = {
       return;
     }
 
-    if(onlineTas[message.author.id].afk) {
+    if (onlineTas[message.author.id].afk) {
       onlineTas[message.author.id].afk = true; // Moves TA to AFK
-      message.reply(`You are now AFK. Hurry back, there are ${queue.length} people left in the queue.`);
+      message.reply(`You are now AFK. ${queue.length ? `Hurry back, there are ${queue.length} people left in the queue.` : ''}`);
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} will be right back! :point_up:`);
       message.react(ACK);
     } else {
@@ -423,7 +422,7 @@ exports.cmds = {
   /**
    * Any user can use this command to see a list of available commands for them. (Role-specific)
    *
-   * @param {Obejct} message - The Discord message object to interact with.
+   * @param {Object} message - The Discord message object to interact with.
    */
   '!help': (message) => {
     if (TA_CHANNEL === message.channel.id) {
