@@ -384,7 +384,14 @@ exports.cmds = {
           });
         return;
       }
-      delete onlineTas[message.author.id];
+
+      if(offlineCommands) {
+        message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
+      } else {
+        delete onlineTas[message.author.id];
+        message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
+      }
+      n
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
     }
@@ -400,7 +407,7 @@ exports.cmds = {
   '!off-commands': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
 
-      if(args.length == 0) {
+      if(args.length === 0) {
 
         message.react(ACK);
         offlineCommands = !offlineCommands;
@@ -420,7 +427,7 @@ exports.cmds = {
         return;
       }
 
-      if(args[0] == "on") {
+      if(args[0] === "on") {
 
         message.react(ACK);
 
