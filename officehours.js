@@ -18,7 +18,7 @@ const onlineTas = {};
 const hiddenTas = {};
 let offlineCommands = false;
 
-function readyHelper(message, listAtAuthorId, listAtIndex) {
+function readyHelper(message, listAtAuthorId, listAtIndex, queueMessage) {
 
   // console.log("list length: ", list.length);
   // for(let i = 0; i < list.length; i+=1) {
@@ -29,7 +29,7 @@ function readyHelper(message, listAtAuthorId, listAtIndex) {
     listAtAuthorId.last_ready_msg.delete();
     
   }
-  listAtIndex.message.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+  queueMessage.reply(`${getNickname(message)} is ready for you. Move to their office.`)
     .then((reply) => {
     listAtAuthorId.last_ready_msg = reply;
   });
