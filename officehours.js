@@ -420,9 +420,11 @@ exports.cmds = {
 
       delete onlineTas[message.author.id];
 
-      // TODO: fix this printing twice / refactor code so that it prints once.
-      message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
-      message.react(ACK);
+      
+      if(!isHidden(message.author)){
+        message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
+        message.react(ACK);
+      }
     }
   },
 
