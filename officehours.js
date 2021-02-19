@@ -15,6 +15,7 @@ const {
 const queue = [];
 const dequeued = [];
 const onlineTas = {};
+const hiddenTas = {};
 let offlineCommands = false;
 
 function getNickname(message) {
@@ -35,6 +36,7 @@ function index(member) {
 }
 
 const isOnline = (member) => member.id in onlineTas;
+const isHidden = (member) => member.id in hiddenTas;
 const contains = (member) => index(member) !== -1;
 
 exports.cmds = {
@@ -372,9 +374,9 @@ exports.cmds = {
    *
    * @param {Object} message - The discord messsage object to interact with.
    */
-  '!offline': (message) => {
+  '!offline': (message, args) => {
     if (TA_CHANNEL === message.channel.id) {
-      if (!isOnline(message.author)) {
+      if (!isOnline(message.author) && !isHidden(message.author)) {
         message.react(NAK);
         message.reply('You are already offline.')
           .then((msg) => {
@@ -385,13 +387,25 @@ exports.cmds = {
         return;
       }
 
-      if(offlineCommands) {
-        message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
-      } else {
-        delete onlineTas[message.author.id];
-        message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
+      if (args.length === 0) {
+        message.reply("Please add a valid argument (partial, full) to set your offline status.");
+        message.react(NAK);
+        return;
       }
-      
+
+      if(args[0] === 'partial') {
+        offlineCommands = true;
+        hiddenTas[message.author.id] = {}; // Moves TA to hidden
+        message.reply("You are now marked as offline, but you are still able to use certain commands offline.");
+      } else if(args[0] === 'full') {
+        message.reply("You are now marked as offline. No commands will work as offline commands are not enabled.");
+      } else {
+        message.reply("The offline setting could not be set due to an invalid argument.");
+        message.react(NAK);
+        return;
+      }
+
+      delete onlineTas[message.author.id];
       message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now offline. :x:`);
       message.react(ACK);
     }
