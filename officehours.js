@@ -273,7 +273,7 @@ exports.cmds = {
       onlineTas[authorId].last_ready_msg.delete();
     }
 
-    msg.reply(`${getNickname(message)} is ready for you. Move to their office.`)
+    msg.reply(`${message.author} is ready for you. Move to their office.`)
       .then((reply) => {
         onlineTas[authorId].last_ready_msg = reply;
       });
@@ -281,7 +281,7 @@ exports.cmds = {
     onlineTas[authorId].last_helped_time = new Date();
 
     msg.delete();
-    message.reply(`${getNickname(msg)} is next. There are ${queue.length - 1} people left in the queue.`);
+    message.reply(`${message.author} is next. There are ${queue.length - 1} people left in the queue.`);
 
     dequeued.push(queue[readyIndex]);
     queue.splice(readyIndex, 1);
